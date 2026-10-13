@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en-US" xmlns:th="www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{listeo/css/style.css}">
+    <link rel="stylesheet" th:href="@{listeo/css/main-color.css}">
+
+</head>
+<th:block th:replace="layout/user-layout :: layout">
+    <th:block th:fragment="pageContent">
+        <div id="dashboard" style="padding-top: 0px;">
+
+            <div class="dashboard-content" style="width: 80%; margin-left: 0px; margin: 0 100px;">
+
+                <!-- Titlebar -->
+                <div id="titlebar">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2>Lịch sử đơn hàng</h2>
+                            <!-- Breadcrumbs -->
+                            <nav id="breadcrumbs">
+                                <ul>
+                                    <li><a th:href="@{/home}">Trang chủ</a></li>
+                                    <li>Profile</li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Invoices -->
+                    <div style="width: 100%;">
+                        <div class="dashboard-list-box invoices with-icons margin-top-20">
+                            <h4>Đơn hàng</h4>
+                            <ul>
+                                <th:block th:each="y : ${listOrder}">
+                                    <li><i class="list-box-icon sl sl-icon-doc"></i> <strong
+                                            th:text="${y.order_Item[0].variant.product.productName}"></strong> <span
+                                            th:if="${#lists.size(y.order_Item) >1}"
+                                            style="margin-left: 20px; color: rgb(207, 32, 97)"
+                                            th:text="' and ' + ${#lists.size(y.order_Item)} + ' more ...'"></span>
+                                        <ul>
+                                            <li class="unpaid" style="color: #5392fa;"
+                                                th:if="${y.payment_Method == 'Payment on delivery'}"
+                                                th:text="'Thanh toán khi nhận hàng'">
+                                            </li>
+
+                                            <li class="paid" th:if="${y.payment_Method == 'Payment with bank'}"
+                                                th:text="'Thanh toán online'">
+                                            </li>
+                                            <li th:text="'Order: #' + ${y.id}"></li>
+                                            <li th:text="'Date: ' + ${#temporals.format(y.booking_Date, 'dd-MM-yyyy')}">
+                                            </li>
+                                            <li>
+                                                <strong>Trạng thái đơn hàng:</strong>
+                                                <span th:text="${
+            y.status == 'Pending' ? 'Chờ xác nhận' :
+            y.status == 'Confirmed' ? 'Đã xác nhận' :
+            y.status == 'Shipping' ? 'Đang giao hàng' :
+            y.status == 'Completed' ? 'Đã giao hàng' :
+            y.status == 'Cancelled' ? 'Đã hủy' :
+            y.status
+        }"></span>
+                                            </li>
+
+                                            <li>
+                                                <strong>Trạng thái thanh toán:</strong>
+                                                <span th:text="${
+            y.paymentStatus == 'Unpaid' ? 'Chưa thanh toán' :
+            y.paymentStatus == 'Paid' ? 'Đã thanh toán' :
+            y.paymentStatus
+        }"></span>
+                                            </li>
+                                        </ul>
+                                        <div class="buttons-to-right">
+                                            <a th:href="@{/invoice/{id}(id=${y.id})}" class="button gray">Xem chi
+                                                tiết</a>
+                                        </div>
+                                    </li>
+                                </th:block>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</th:block>
+</body>
+
+</html>

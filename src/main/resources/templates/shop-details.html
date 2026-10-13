@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en-US" xmlns:th="www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+
+</head>
+<th:block th:replace="layout/user-layout :: layout">
+    <th:block th:fragment="pageContent">
+        <section class="yd-details-section">
+            <div class="container">
+                <div style="margin-bottom: 25px; font-size: 14px; color: #666;">
+                    <a th:href="@{/home}" style="color:#666; text-decoration:none;">Trang chủ</a> /
+                    <a th:href="@{/shop}" style="color:#666; text-decoration:none;">Sản phẩm</a> /
+                    <span style="color:#111;">Chi tiết</span>
+                </div>
+
+                <div class="yd-main-row">
+                    <div class="yd-col-images">
+                        <div class="yd-main-image-panel">
+                            <div class="tab-content" id="mainImageTabs">
+                                <th:block th:each="v, vStat : ${product.variants}">
+                                    <th:block th:if="${v.productImage != null and !v.productImage.isEmpty()}">
+                                        <div class="tab-pane product-image-pane" th:id="'tabs-v-' + ${v.id}"
+                                            role="tabpanel" th:data-color="${v.color}" th:data-size="${v.size}">
+                                            <img th:src="${v.productImage[0].url_Image}" alt="Product Image">
+                                        </div>
+                                    </th:block>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <ul class="yd-thumbs-wrapper nav nav-tabs" role="tablist" id="thumbList">
+                            <th:block th:each="v, vStat : ${product.variants}">
+                                <th:block th:if="${v.productImage != null and !v.productImage.isEmpty()}">
+                                    <li class="yd-thumb-item nav-item product-thumb-item" th:data-color="${v.color}"
+                                        th:data-size="${v.size}">
+                                        <a class="nav-link" data-toggle="tab" th:href="'#tabs-v-' + ${v.id}" role="tab">
+                                            <div class="yd-thumb-box"
+                                                th:style="'background-image: url(' + ${v.productImage[0].url_Image} + ');'">
+                                            </div>
+                                        </a>
+                                    </li>
+                                </th:block>
+                            </th:block>
+                        </ul>
+                    </div>
+
+                    <div class="yd-col-info">
+                        <div class="yd-info-container">
+                            <h3 id="productPrice" th:text="0" class="yd-price-text"></h3>
+                            <h4 th:text="${product.productName}" class="yd-product-title"></h4>
+                            <div class="yd-sku-text">Mã sản phẩm: <span th:text="${product.id}"></span></div>
+
+                            <form th:action="@{/addToCart}" method="post" onsubmit="return validateForm()">
+                                <input type="hidden" name="product_id" th:value="${product.id}">
+                                <input type="hidden" id="selectedColor" name="color" required>
+                                <input type="hidden" id="selectedSize" name="size" required>
+
+                                <div th:if="${error}" class="alert alert-danger"
+                                    style="color: red; margin-bottom: 15px; font-weight: bold;">
+                                    <i class="fa fa-exclamation-triangle"></i> <span th:text="${error}"></span>
+                                </div>
+
+                                <div class="yd-variant-group">
+                                    <span class="yd-variant-label">Màu sắc: <b id="lblSelectedColor">Chưa
+                                            chọn</b></span>
+                                    <div class="yd-options-flex">
+                                        <button type="button" th:each="c:${colors}" class="yd-btn-color"
+                                            th:data-color="${c}" th:text="${c}" onclick="selectColor(this)">
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="yd-variant-group">
+                                    <span class="yd-variant-label"
+                                        style="display: flex; justify-content: space-between; width: 100%;">
+                                        <span>Kích thước: <b id="lblSelectedSize">Chưa chọn</b></span>
+                                    </span>
+                                    <div class="yd-options-flex">
+                                        <button type="button" th:each="s:${sizes}" class="yd-btn-size"
+                                            th:data-size="${s}" th:text="${s}" onclick="selectSize(this)">
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="yd-action-row">
+                                    <div class="yd-qty-selector">
+                                        <button type="button" onclick="changeQty(-1)">-</button>
+                                        <input type="number" id="quantity" name="quantity" value="1" min="1">
+                                        <button type="button" onclick="changeQty(1)">+</button>
+                                    </div>
+                                    <div id="stockInfo" class="yd-stock-info"
+                                        style="margin-left: 15px; font-size: 14px; color: #555;">
+                                        <span id="lblStockStatus">Vui lòng chọn màu sắc và kích thước</span>
+                                    </div>
+                                    <button type="submit" class="yd-btn-add-cart">
+                                        Thêm vào giỏ <i class="fa fa-shopping-cart"></i>
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="yd-trust-container">
+                                <div class="yd-trust-title">FashionStore Shop cam kết <i class="fa fa-check-circle"></i></div>
+                                <div class="yd-trust-grid">
+                                    <div class="yd-trust-card"><b>Đổi, trả miễn phí</b> tại nhà nếu sản phẩm lỗi hoặc
+                                        không vừa vặn.</div>
+                                    <div class="yd-trust-card"><b>Giao trong 3-5 ngày</b> toàn quốc & miễn phí ship đơn
+                                        từ 498k.</div>
+                                    <div class="yd-trust-card">Cam kết bảo mật tuyệt đối thông tin khách hàng.</div>
+                                    <div class="yd-trust-card">Cần tư vấn thêm chất liệu? <b>Chat ngay!</b></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="related spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3 class="related-title">Sản phẩm liên quan</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <th:block th:each="y : ${relatedProduct}">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" th:data-setbg="${y.mainImage}">
+                                    <span class="label">Mới</span>
+                                    <ul class="product__hover">
+                                        <li><a th:href="@{/productDetail/{id}(id=${y.id})}"><img
+                                                    th:src="@{/img/icon/search.png}" alt=""></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6 th:text="${y.productName}"></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </section>
+    </th:block>
+</th:block>
+<script th:inline="javascript">
+    const productVariants = /*[[${product.variants}]]*/[];
+    const defaultPrice = 0;
+
+    let currentSelectedColor = "";
+    let currentSelectedSize = "";
+    let currentMaxStock = 0; 
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const firstPane = document.querySelector('.product-image-pane');
+        const firstThumbLink = document.querySelector('.product-thumb-item a');
+
+        if (firstPane) firstPane.classList.add('active');
+        if (firstThumbLink) firstThumbLink.classList.add('active');
+    });
+
+    function selectColor(element) {
+        document.querySelectorAll('.yd-btn-color').forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
+
+        currentSelectedColor = element.getAttribute('data-color');
+        document.getElementById('selectedColor').value = currentSelectedColor;
+        document.getElementById('lblSelectedColor').innerText = currentSelectedColor;
+
+        updateDynamicPriceAndStock();
+        updateProductImages();
+    }
+
+    function selectSize(element) {
+        document.querySelectorAll('.yd-btn-size').forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
+
+        currentSelectedSize = element.getAttribute('data-size');
+        document.getElementById('selectedSize').value = currentSelectedSize;
+        document.getElementById('lblSelectedSize').innerText = currentSelectedSize;
+
+        updateDynamicPriceAndStock();
+        updateProductImages();
+    }
+
+    function updateDynamicPriceAndStock() {
+        const lblStock = document.getElementById('lblStockStatus');
+        const qtyInput = document.getElementById('quantity');
+
+        if (currentSelectedColor && currentSelectedSize) {
+            const matchedVariant = productVariants.find(v => v.color === currentSelectedColor && v.size === currentSelectedSize);
+
+            if (matchedVariant) {
+                displayPrice(matchedVariant.price);
+
+                currentMaxStock = matchedVariant.quantity;
+                if (currentMaxStock > 0) {
+                    lblStock.innerHTML = `Còn lại: <b style="color: #28a745;">${currentMaxStock}</b> sản phẩm`;
+                    qtyInput.max = currentMaxStock; 
+
+                    if (parseInt(qtyInput.value) > currentMaxStock) {
+                        qtyInput.value = currentMaxStock;
+                    }
+                } else {
+                    lblStock.innerHTML = `<b style="color: #dc3545;">Hết hàng</b>`;
+                    qtyInput.value = 0;
+                    qtyInput.max = 0;
+                }
+                return;
+            } else {
+                lblStock.innerHTML = `<b style="color: #dc3545;">Tùy chọn này hiện không khả dụng</b>`;
+                currentMaxStock = 0;
+                qtyInput.value = 1;
+                displayPrice(defaultPrice);
+                return;
+            }
+        }
+
+        else if (currentSelectedColor || currentSelectedSize) {
+            const matchedVariant = productVariants.find(v => v.color === currentSelectedColor || v.size === currentSelectedSize);
+            if (matchedVariant) {
+                displayPrice(matchedVariant.price);
+            }
+            lblStock.innerHTML = `Vui lòng chọn đủ màu sắc và kích thước`;
+            currentMaxStock = 0;
+        } else {
+            displayPrice(defaultPrice);
+            lblStock.innerHTML = `Vui lòng chọn màu sắc và kích thước`;
+            currentMaxStock = 0;
+        }
+    }
+
+    function changeQty(amount) {
+        let qtyInput = document.getElementById('quantity');
+        let currentVal = parseInt(qtyInput.value) || 1;
+        let newVal = currentVal + amount;
+
+        if (!currentSelectedColor || !currentSelectedSize) {
+            alert("Vui lòng chọn Màu sắc và Kích thước trước!");
+            return;
+        }
+
+        if (currentMaxStock <= 0) {
+            alert("Sản phẩm thuộc tùy chọn này hiện đã hết hàng!");
+            return;
+        }
+
+        if (newVal < 1) {
+            newVal = 1;
+        } else if (newVal > currentMaxStock) {
+            alert(`Rất tiếc, chỉ còn lại ${currentMaxStock} sản phẩm trong kho!`);
+            newVal = currentMaxStock;
+        }
+
+        qtyInput.value = newVal;
+    }
+
+    function updateProductImages() {
+        const panes = document.querySelectorAll('.product-image-pane');
+        const thumbs = document.querySelectorAll('.product-thumb-item');
+
+        let matchedPane = null;
+        let matchedThumb = null;
+
+        if (currentSelectedColor && currentSelectedSize) {
+            panes.forEach(pane => {
+                if (pane.getAttribute('data-color') === currentSelectedColor && pane.getAttribute('data-size') === currentSelectedSize) {
+                    matchedPane = pane;
+                }
+            });
+            thumbs.forEach(thumb => {
+                if (thumb.getAttribute('data-color') === currentSelectedColor && thumb.getAttribute('data-size') === currentSelectedSize) {
+                    matchedThumb = thumb;
+                }
+            });
+        }
+
+        if (!matchedPane) {
+            const searchAttr = currentSelectedColor ? 'data-color' : (currentSelectedSize ? 'data-size' : null);
+            const searchVal = currentSelectedColor || currentSelectedSize;
+
+            if (searchAttr) {
+                panes.forEach(pane => {
+                    if (!matchedPane && pane.getAttribute(searchAttr) === searchVal) {
+                        matchedPane = pane;
+                    }
+                });
+                thumbs.forEach(thumb => {
+                    if (!matchedThumb && thumb.getAttribute(searchAttr) === searchVal) {
+                        matchedThumb = thumb;
+                    }
+                });
+            }
+        }
+
+        if (matchedPane && matchedThumb) {
+            panes.forEach(p => p.classList.remove('active'));
+            thumbs.forEach(t => {
+                const link = t.querySelector('a');
+                if (link) link.classList.remove('active');
+            });
+
+            matchedPane.classList.add('active');
+            const activeLink = matchedThumb.querySelector('a');
+            if (activeLink) activeLink.classList.add('active');
+        }
+    }
+
+    function displayPrice(priceValue) {
+        if (priceValue !== null && priceValue !== undefined) {
+            const formattedPrice = Number(priceValue).toLocaleString('vi-VN') + 'đ';
+            document.getElementById('productPrice').innerText = formattedPrice;
+        }
+    }
+
+    function validateForm() {
+        if (!currentSelectedColor || !currentSelectedSize) {
+            alert("Vui lòng chọn đầy đủ Màu sắc và Kích thước sản phẩm trước khi thêm vào giỏ!");
+            return false;
+        }
+        if (currentMaxStock <= 0) {
+            alert("Sản phẩm thuộc tùy chọn này hiện đã hết hàng, không thể thêm vào giỏ!");
+            return false;
+        }
+        return true;
+    }
+</script>
+</body>
+
+</html>

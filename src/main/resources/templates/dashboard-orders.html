@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+	<!-- Font chữ hiện đại -->
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+	<style>
+		.dt-container-wrapper {
+			font-family: 'Inter', sans-serif;
+			background: #fff;
+			padding: 24px;
+			border-radius: 12px;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+			margin-top: 20px;
+			border: 1px solid #f0f2f5;
+		}
+
+		/* Tùy biến DataTables */
+		.dataTables_wrapper .dataTables_length select,
+		.dataTables_wrapper .dataTables_filter input {
+			border: 1px solid #e2e8f0;
+			border-radius: 6px;
+			padding: 6px 12px;
+			outline: none;
+			font-size: 14px;
+		}
+
+		.dataTables_wrapper .dataTables_filter input {
+			margin-left: 10px;
+		}
+
+		.dataTables_wrapper .dataTables_filter input:focus {
+			border-color: #3b82f6;
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+		}
+
+		/* Khắc phục cấu trúc Table */
+		table.dataTable {
+			border-collapse: collapse !important;
+			margin: 20px 0 !important;
+			width: 100% !important;
+		}
+
+		table.dataTable thead th {
+			background-color: #f8fafc;
+			color: #64748b;
+			font-weight: 600;
+			text-transform: uppercase;
+			font-size: 12px;
+			letter-spacing: 0.5px;
+			padding: 14px 16px !important;
+			border-bottom: 2px solid #e2e8f0 !important;
+			text-align: left;
+		}
+
+		table.dataTable tbody td {
+			padding: 16px 16px !important;
+			vertical-align: middle !important;
+			border-bottom: 1px solid #f1f5f9 !important;
+			color: #334155;
+			font-size: 14px;
+		}
+
+		table.dataTable tbody tr:hover {
+			background-color: #f8fafc !important;
+		}
+
+		/* Khách hàng Info Box */
+		.customer-info-box {
+			font-size: 13px;
+			line-height: 1.5;
+		}
+
+		.customer-info-box .customer-name {
+			font-weight: 600;
+			color: #1e293b;
+			font-size: 14px;
+		}
+
+		.customer-info-box .customer-meta {
+			color: #64748b;
+			font-size: 12px;
+		}
+
+		.customer-avatar {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			object-fit: cover;
+			margin-right: 12px;
+			border: 2px solid #e2e8f0;
+		}
+
+		/* Badge trạng thái viên thuốc */
+		.badge-status {
+			padding: 6px 12px;
+			border-radius: 9999px;
+			font-weight: 500;
+			font-size: 12px;
+			display: inline-flex;
+			align-items: center;
+			white-space: nowrap;
+		}
+
+		/* Nút hành động gọn gàng */
+		.btn-action-group {
+			display: flex;
+			gap: 6px;
+			flex-wrap: wrap;
+			max-width: 280px;
+		}
+
+		.btn-dt-action {
+			padding: 6px 10px;
+			font-size: 12px;
+			font-weight: 500;
+			border-radius: 6px;
+			text-decoration: none !important;
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			transition: all 0.2s ease;
+			white-space: nowrap;
+		}
+
+		.btn-dt-action:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+		}
+
+		/* Palette màu nút bấm */
+		.btn-dt-confirm {
+			background-color: #eab308;
+			color: #fff !important;
+		}
+
+		.btn-dt-ship {
+			background-color: #3b82f6;
+			color: #fff !important;
+		}
+
+		.btn-dt-complete {
+			background-color: #10b981;
+			color: #fff !important;
+		}
+
+		.btn-dt-cancel {
+			background-color: #ef4444;
+			color: #fff !important;
+		}
+
+		.btn-dt-message {
+			background-color: #f1f5f9;
+			color: #475569 !important;
+			border: 1px solid #cbd5e1;
+		}
+
+		.btn-dt-message:hover {
+			background-color: #e2e8f0;
+		}
+
+		.btn-dt-invoice {
+			background-color: #f1f5f9;
+			color: #475569 !important;
+			border: 1px solid #cbd5e1;
+		}
+
+		.btn-dt-invoice:hover {
+			background-color: #e2e8f0;
+		}
+
+		.btn-dt-delete {
+			background-color: #fff;
+			color: #ef4444 !important;
+			border: 1px solid #fee2e2;
+		}
+
+		.btn-dt-delete:hover {
+			background-color: #fef2f2;
+			border-color: #fca5a5;
+		}
+
+		/* Custom phân trang DataTables */
+		.dataTables_wrapper .dataTables_paginate {
+			margin-top: 15px;
+		}
+
+		.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+			background: #3b82f6 !important;
+			color: #fff !important;
+			border: 1px solid #3b82f6 !important;
+			border-radius: 6px !important;
+		}
+
+		.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+			background: #f1f5f9 !important;
+			color: #1e293b !important;
+			border-radius: 6px !important;
+			border: 1px solid #cbd5e1 !important;
+		}
+
+		/* Container của dropdown */
+		.custom-dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		/* Nút bấm để kích hoạt dropdown */
+		.dropdown-trigger-btn {
+			background-color: #f1f5f9;
+			color: #475569;
+			border: 1px solid #cbd5e1;
+			padding: 6px 12px;
+			font-size: 12px;
+			font-weight: 500;
+			border-radius: 6px;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			white-space: nowrap;
+			transition: all 0.2s ease;
+		}
+
+		.dropdown-trigger-btn:hover {
+			background-color: #e2e8f0;
+			color: #1e293b;
+		}
+
+		/* Nội dung Menu ẩn đi mặc định */
+		.dropdown-menu-content {
+			display: none;
+			position: absolute;
+			right: 0;
+			/* Đẩy menu căn lề phải để không bị tràn màn hình */
+			top: 100%;
+			margin-top: 4px;
+			background-color: #ffffff;
+			min-width: 150px;
+			box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+			border: 1px solid #e2e8f0;
+			border-radius: 8px;
+			z-index: 99;
+			overflow: hidden;
+			padding: 4px 0;
+		}
+
+		/* Đường gạch ngang phân cách */
+		.dropdown-divider {
+			height: 1px;
+			background-color: #f1f5f9;
+			margin: 4px 0;
+		}
+
+		/* Từng item bên trong menu */
+		.dropdown-menu-content a {
+			color: #334155 !important;
+			padding: 8px 14px;
+			text-decoration: none !important;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			font-size: 13px;
+			font-weight: 500;
+			transition: background 0.15s ease;
+		}
+
+		.dropdown-menu-content a:hover {
+			background-color: #f8fafc;
+			color: #3b82f6 !important;
+		}
+
+		.dropdown-menu-content a.text-danger {
+			color: #ef4444 !important;
+		}
+
+		.dropdown-menu-content a.text-danger:hover {
+			background-color: #fef2f2;
+			color: #b91c1c !important;
+		}
+
+		.custom-dropdown:hover .dropdown-menu-content {
+			display: block;
+		}
+
+		table.dataTable tbody td {
+			position: relative;
+		}
+	</style>
+</head>
+
+<body>
+	<th:block th:replace="layout/admin-layout :: layout">
+		<th:block th:fragment="pageContent">
+
+			<div id="titlebar">
+				<div class="row">
+					<div class="col-md-12">
+						<h2>Đơn đặt hàng</h2>
+						<nav id="breadcrumbs">
+							<ul>
+								<li><a href="#">Trang chủ</a></li>
+								<li><a href="#">Bảng điều khiển</a></li>
+								<li>Đơn hàng</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12 col-md-12">
+					<div class="dt-container-wrapper">
+						<h4 style="margin-bottom: 20px; font-weight: 700; color: #1e293b; font-size: 16px;">Danh sách
+							quản lý đơn hàng</h4>
+
+						<div class="table-filter-bar"
+							style="display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-end; flex-wrap: wrap;">
+							<div class="filter-item" style="display: flex; flex-direction: column; gap: 6px;">
+								<label style="font-size: 13px; font-weight: 600; color: #475569;">Từ ngày:</label>
+								<input type="date" id="filter-from-date"
+									style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 14px; color: #334155;">
+							</div>
+							<div class="filter-item" style="display: flex; flex-direction: column; gap: 6px;">
+								<label style="font-size: 13px; font-weight: 600; color: #475569;">Đến ngày:</label>
+								<input type="date" id="filter-to-date"
+									style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 14px; color: #334155;">
+							</div>
+							<div class="filter-item" style="display: flex; flex-direction: column; gap: 6px;">
+								<label style="font-size: 13px; font-weight: 600; color: #475569;">Trạng thái
+									đơn:</label>
+								<select id="filter-status"
+									style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 14px; color: #334155; min-width: 160px; background-color: #fff;">
+									<option value="">Tất cả trạng thái</option>
+									<option value="Chờ xác nhận">Chờ xác nhận</option>
+									<option value="Đã xác nhận">Đã xác nhận</option>
+									<option value="Đang giao">Đang giao</option>
+									<option value="Hoàn thành">Hoàn thành</option>
+									<option value="Đã hủy">Đã hủy</option>
+								</select>
+							</div>
+							<div class="filter-item" style="margin-left: auto;">
+								<button type="button" id="btn-export-excel"
+									style="padding: 8px 16px; background-color: #10b981; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+									<i class="sl sl-icon-doc"></i> Xuất Excel
+								</button>
+							</div>
+						</div>
+						<style>
+							.dataTables_wrapper .dataTables_paginate .paginate_button.next,
+							.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+							.dataTables_wrapper .dataTables_paginate .page-item.next,
+							.dataTables_wrapper .dataTables_paginate .page-item.previous {
+								display: none !important;
+							}
+
+							.dataTables_wrapper .dataTables_paginate {
+								margin-top: 20px !important;
+								padding-top: 0 !important;
+								display: flex !important;
+								flex-direction: row !important;
+								align-items: center !important;
+								justify-content: flex-end !important;
+								gap: 4px !important;
+								clear: both !important;
+							}
+
+							.dataTables_wrapper .dataTables_paginate .paginate_button {
+								display: inline-flex !important;
+								align-items: center !important;
+								justify-content: center !important;
+								min-width: 36px !important;
+								height: 36px !important;
+								padding: 0 6px !important;
+								margin: 0 !important;
+								font-size: 14px !important;
+								font-weight: 600 !important;
+								color: #475569 !important;
+								background: #fff !important;
+								border: 1px solid #e2e8f0 !important;
+								border-radius: 8px !important;
+								cursor: pointer !important;
+								text-decoration: none !important;
+								box-shadow: none !important;
+								float: none !important;
+							}
+
+							.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+							.dataTables_wrapper .dataTables_paginate .paginate_button.active .page-link {
+								color: #fff !important;
+								background: #3b82f6 !important;
+								border-color: #3b82f6 !important;
+							}
+						</style>
+
+						<!-- BẢNG DỮ LIỆU -->
+						<table class="data-table table ">
+							<thead>
+								<tr>
+									<th style="width:60px;">ID</th>
+									<th>Khách hàng</th>
+									<th>Ngày mua</th>
+									<th>Tổng tiền</th>
+									<th>Trạng thái đơn</th>
+									<th>Thanh toán</th>
+									<th class="datatable-nosort">Hành động</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="y : ${listOrder}">
+									<td style="font-weight: 600; color: #64748b;" th:text="'#' + ${y.id}"></td>
+									<td>
+										<div style="display: flex; align-items: center;">
+											<img th:src="${y.user.avatar != null ? y.user.avatar : '/images/default-avatar.png'}"
+												class="customer-avatar" alt="Avatar">
+											<div class="customer-info-box">
+												<div class="customer-name" th:text="${y.fullname}"></div>
+												<div class="customer-meta">
+													Tài khoản: <span th:text="${y.user.username}"></span><br>
+													<span th:text="${y.phone}"></span>
+												</div>
+											</div>
+										</div>
+									</td>
+
+									<td th:text="${#temporals.format(y.booking_Date, 'dd/MM/yyyy')}"></td>
+
+									<td style="font-weight: 700; color: #0f172a;"
+										th:text="${#numbers.formatDecimal(y.total, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+									</td>
+
+									<td th:switch="${y.status}">
+										<span th:case="'Pending'" class="badge-status"
+											style="background:#fef9c3; color:#a16207;">Chờ xác nhận</span>
+										<span th:case="'Confirmed'" class="badge-status"
+											style="background:#dbeafe; color:#1d4ed8;">Đã xác nhận</span>
+										<span th:case="'Shipped'" class="badge-status"
+											style="background:#f3e8ff; color:#6b21a8;">Đang giao</span>
+										<span th:case="'Completed'" class="badge-status"
+											style="background:#dcfce7; color:#15803d;">Hoàn thành</span>
+										<span th:case="'Cancel'" class="badge-status"
+											style="background:#fee2e2; color:#b91c1c;">Đã hủy</span>
+										<span th:case="*" class="badge-status"
+											style="background:#f1f5f9; color:#475569;" th:text="${y.status}"></span>
+									</td>
+
+									<td th:switch="${y.paymentStatus}">
+										<span th:case="'Unpaid'" class="badge-status"
+											style="background:#fee2e2; color:#b91c1c;">Chưa thanh toán</span>
+										<span th:case="'Paid'" class="badge-status"
+											style="background:#dcfce7; color:#15803d;">Đã thanh toán</span>
+										<span th:case="*" class="badge-status"
+											style="background:#f1f5f9; color:#475569;"
+											th:text="${y.paymentStatus}"></span>
+									</td>
+									<td>
+										<div class="btn-action-group">
+											<th:block th:if="${y.status == null || y.status == 'Pending'}">
+												<a th:href="@{/update-order-status/{id}(id=${y.id}, status='Confirmed')}"
+													class="btn-dt-action btn-dt-confirm">
+													<i class="sl sl-icon-check"></i> Xác nhận
+												</a>
+												<a th:href="@{/update-order-status/{id}(id=${y.id}, status='Cancel')}"
+													class="btn-dt-action btn-dt-cancel">
+													<i class="sl sl-icon-close"></i> Hủy
+												</a>
+											</th:block>
+
+											<th:block th:if="${y.status == 'Confirmed'}">
+												<a th:href="@{/update-order-status/{id}(id=${y.id}, status='Shipped')}"
+													class="btn-dt-action btn-dt-ship">
+													<i class="sl sl-icon-paper-plane"></i> Giao hàng
+												</a>
+												<a th:href="@{/update-order-status/{id}(id=${y.id}, status='Cancel')}"
+													class="btn-dt-action btn-dt-cancel">
+													<i class="sl sl-icon-close"></i> Hủy
+												</a>
+											</th:block>
+
+											<th:block th:if="${y.status == 'Shipped'}">
+												<a th:href="@{/update-order-status/{id}(id=${y.id}, status='Completed')}"
+													class="btn-dt-action btn-dt-complete">
+													<i class="sl sl-icon-trophy"></i> Hoàn thành
+												</a>
+											</th:block>
+
+											<div class="custom-dropdown">
+												<button class="dropdown-trigger-btn" type="button">
+													<i class="sl sl-icon-settings"></i> Thao tác <i
+														class="sl sl-icon-arrow-down" style="font-size: 10px;"></i>
+												</button>
+												<div class="dropdown-menu-content">
+													<a href="javascript:void(0);"
+														th:onclick="openMessageModal([[${y.user.email}]], [[${y.user.username}]])">
+														<i class="sl sl-icon-envelope-open"></i> Nhắn tin
+													</a>
+													<a th:href="@{/dashboard-invoice/{id}(id=${y.id})}">
+														<i class="im im-icon-Coin"></i> Hóa đơn
+													</a>
+													<div class="dropdown-divider"></div>
+													<a th:href="@{/delete-order/{id}(id=${y.id})}"
+														onclick="return confirm('Bạn chắc chắn muốn xóa lịch sử đơn hàng này?')"
+														class="text-danger">
+														<i class="sl sl-icon-trash"></i> Xóa đơn
+													</a>
+												</div>
+											</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+			</div>
+
+			<div id="msgModal"
+				style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background:rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); align-items:center; justify-content:center;">
+				<div
+					style="background:#fff; padding:30px; border-radius:12px; width:100%; max-width:450px; position:relative; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+					<h3 style="margin-top:0; font-weight:700; color:#1e293b; font-size:18px;" id="msgModalTitle">Gửi tin
+						nhắn</h3>
+					<form action="/send-message" method="post">
+						<input type="hidden" id="msgEmail" name="email">
+						<div style="margin-bottom: 20px;">
+							<textarea id="msgContent" name="message" cols="40" rows="4"
+								style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; outline:none; font-family:'Inter', sans-serif;"
+								required></textarea>
+						</div>
+						<div style="text-align: right; display:flex; justify-content:flex-end; gap:8px;">
+							<button type="button" onclick="closeMessageModal()"
+								style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:500;">Hủy</button>
+							<button type="submit"
+								style="background:#3b82f6; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:500;">Gửi
+								đi</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+			<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+			<script>
+				$(document).ready(function () {
+					$.fn.dataTable.ext.search.push(
+						function (settings, data, dataIndex) {
+							var fromDateVal = $('#filter-from-date').val();
+							var toDateVal = $('#filter-to-date').val();
+
+							var dateString = data[2] || "";
+							if (!dateString) return true;
+
+							var parts = dateString.split("/");
+							var rowDate = new Date(parts[2], parts[1] - 1, parts[0]);
+
+							var minDate = fromDateVal ? new Date(fromDateVal) : null;
+							var maxDate = toDateVal ? new Date(toDateVal) : null;
+
+							if (minDate) minDate.setHours(0, 0, 0, 0);
+							if (maxDate) maxDate.setHours(0, 0, 0, 0);
+							rowDate.setHours(0, 0, 0, 0);
+
+							if (minDate && rowDate < minDate) return false;
+							if (maxDate && rowDate > maxDate) return false;
+
+							return true;
+						}
+					);
+
+					if ($.fn.dataTable.isDataTable('.data-table')) {
+						$('.data-table').DataTable().destroy();
+					}
+
+					var table = $('.data-table').DataTable({
+						responsive: true,
+						autoWidth: false,
+
+						order: [],
+						dom: '<"top"rf>t<"bottom"ip>',
+						language: {
+							search: "Tìm kiếm:",
+							lengthMenu: "Hiển thị _MENU_ dòng",
+							info: "Hiển thị từ _START_ đến _END_ trong tổng số _TOTAL_ đơn hàng",
+							infoEmpty: "Không có dữ liệu",
+							zeroRecords: "Không tìm thấy kết quả phù hợp",
+						}
+					});
+
+					$('#filter-from-date, #filter-to-date').on('change', function () {
+						table.draw();
+					});
+
+					$('#filter-status').on('change', function () {
+						var statusVal = $(this).val();
+						table.column(4).search(statusVal ? '^' + statusVal + '$' : '', true, false).draw();
+					});
+
+					$('#btn-reset-filter').on('click', function () {
+						$('#filter-from-date').val('');
+						$('#filter-to-date').val('');
+						$('#filter-status').val('');
+						table.search('').columns().search('').draw();
+					});
+				});
+			</script>
+			<!-- Thư viện SheetJS để tạo file Excel -->
+			<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.min.js"></script>
+
+			<script>
+				$('#btn-export-excel').on('click', function () {
+					var table = $('.data-table').DataTable();
+
+					var filteredData = table.rows({ filter: 'applied' }).data();
+
+					var excelRows = [];
+
+					excelRows.push(["ID", "Tên Khách Hàng", "Tài Khoản", "Số Điện Thoại", "Ngày Mua", "Tổng Tiền (VNĐ)", "Trạng Thái Đơn", "Thanh Toán"]);
+
+					filteredData.each(function (rowData) {
+						var $row = $('<div>' + rowData.join('|||') + '</div>');
+
+						var id = $(rowData[0]).text().trim() || rowData[0];
+
+						var customerDiv = $(rowData[1]);
+						var name = customerDiv.find('.customer-name').text().trim();
+						var metaText = customerDiv.find('.customer-meta').text().trim();
+						var username = metaText.match(/Tài khoản:\s*([^\s]+)/)?.[1] || '';
+						var phone = metaText.split('\n').pop().trim();
+
+						var date = $(rowData[2]).text().trim() || rowData[2];
+						var total = $(rowData[3]).text().trim().replace(/[^0-9]/g, '');
+						var status = $(rowData[4]).text().trim();
+						var payment = $(rowData[5]).text().trim();
+
+						excelRows.push([
+							id,
+							name,
+							username,
+							phone,
+							date,
+							parseInt(total) || 0,
+							status,
+							payment
+						]);
+					});
+
+					var wb = XLSX.utils.book_new();
+					var ws = XLSX.utils.aoa_to_sheet(excelRows);
+
+					ws['!cols'] = [
+						{ wch: 10 },
+						{ wch: 22 },
+						{ wch: 18 },
+						{ wch: 15 },
+						{ wch: 14 },
+						{ wch: 16 },
+						{ wch: 16 },
+						{ wch: 18 }
+					];
+
+					XLSX.utils.book_append_sheet(wb, ws, "DanhSachDonHang");
+
+					XLSX.writeFile(wb, "Danh_Sach_Don_Hang.xlsx");
+				});
+			</script>
+
+		</th:block>
+	</th:block>
+</body>
+
+</html>

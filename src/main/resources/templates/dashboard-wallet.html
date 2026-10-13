@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <th:block th:replace="layout/admin-layout :: layout">
+        <th:block th:fragment="pageContent">
+            <!-- Titlebar -->
+            <div id="titlebar">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Báo cáo Thống kê Doanh thu</h2>
+                        <nav id="breadcrumbs">
+                            <ul>
+                                <li><a href="#">Trang chủ</a></li>
+                                <li>Tổng quan</li>
+                                <li>Doanh thu</li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div id="report-content" style="background: #fff; padding: 10px;">
+                <div class="row" style="margin-bottom: 25px;">
+                    <div class="col-md-12">
+                        <form method="GET" th:action="@{/dashboard-wallet}"
+                            style="background: #f9f9f9; padding: 15px; border-radius: 4px; display: flex; align-items: flex-end; gap: 15px;">
+                            <div>
+                                <label style="font-weight: bold; display:block; margin-bottom: 5px;">Từ ngày:</label>
+                                <input type="date" name="startDate" th:value="${startDate}" class="form-control"
+                                    style="line-height: 20px; padding: 5px 10px;" />
+                            </div>
+                            <div>
+                                <label style="font-weight: bold; display:block; margin-bottom: 5px;">Đến ngày:</label>
+                                <input type="date" name="endDate" th:value="${endDate}" class="form-control"
+                                    style="line-height: 20px; padding: 5px 10px;" />
+                            </div>
+                            <div>
+                                <button type="submit" class="button" style="padding: 9px 20px; cursor: pointer;">Lọc kết
+                                    quả</button>
+                            </div>
+
+                            <div style="margin-left: auto;">
+                                <button type="button" id="btn-export-pdf" class="button"
+                                    style="padding: 9px 20px; background-color: #e74c3c; color: #fff; cursor: pointer;">
+                                    <i class="sl sl-icon-doc"></i> Xuất PDF
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="dashboard-stat color-1">
+                            <div class="dashboard-stat-content wallet-totals">
+                                <h4
+                                    th:text="${TotalBank != null ? #numbers.formatDecimal(TotalBank, 0, 'COMMA', 0, 'POINT') : 0}">
+                                </h4>
+                                <span>Thành toán ngân hàng <strong class="wallet-currency">VNĐ</strong></span>
+                            </div>
+                            <div class="dashboard-stat-icon"><i class="im im-icon-Money-2"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="dashboard-stat color-3">
+                            <div class="dashboard-stat-content wallet-totals">
+                                <h4
+                                    th:text="${TotalDelivery != null ? #numbers.formatDecimal(TotalDelivery, 0, 'COMMA', 0, 'POINT') : 0}">
+                                </h4>
+                                <span>Thanh toán COD <strong class="wallet-currency">VNĐ</strong></span>
+                            </div>
+                            <div class="dashboard-stat-icon"><i class="im im-icon-Money-Bag"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="dashboard-stat" style="background-color: #e67e22; color: #fff;">
+                            <div class="dashboard-stat-content wallet-totals">
+                                <h4 style="color:#fff;"
+                                    th:text="${TotalProfit != null ? #numbers.formatDecimal(TotalProfit, 0, 'COMMA', 0, 'POINT') : 0}">
+                                </h4>
+                                <span>Lợi nhuận (Tạm tính) <strong class="wallet-currency"
+                                        style="color:#fff;">VNĐ</strong></span>
+                            </div>
+                            <div class="dashboard-stat-icon"><i class="im im-icon-Financial"></i></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="dashboard-stat color-2">
+                            <div class="dashboard-stat-content">
+                                <h4 th:text="${TotalOrder}"></h4>
+                                <span>Tổng số đơn hàng</span>
+                            </div>
+                            <div class="dashboard-stat-icon"><i class="im im-icon-Shopping-Cart"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 20px; margin-bottom: 40px;">
+                    <div class="col-md-12">
+                        <div class="dashboard-list-box"
+                            style="padding: 20px; background: #fff; border-radius: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+                            <h4 style="margin-top:0; margin-bottom: 20px;"><i class="sl sl-icon-graph"></i> Biểu đồ
+                                doanh
+                                thu</h4>
+                            <div style="width: 100%; height: 350px;">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 20px; margin-bottom: 0px;">Đơn hàng</h3>
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="dashboard-list-box invoices with-icons margin-top-20">
+                            <h4>Thanh toán chuyển khoản ngân hàng</h4>
+                            <ul>
+                                <th:block th:each="y : ${listRecentBank}">
+                                    <li><i class="list-box-icon sl sl-icon-basket"></i>
+                                        <strong th:text="${y.user != null ? y.user.username : 'Ẩn danh'}"></strong>
+                                        <ul>
+                                            <li class="paid"
+                                                th:text="${#numbers.formatDecimal(y.total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                                            </li>
+                                            <li th:text="'Mã đơn: #'+${y.id}"></li>
+                                            <li
+                                                th:text="'Ngày đặt: ' + ${#temporals.format(y.booking_Date, 'dd/MM/yyyy')}">
+                                            </li>
+                                        </ul>
+                                        <div class="buttons-to-right">
+                                            <a th:href="@{/dashboard-invoice/{id}(id=${y.id})}" class="button gray">Xem
+                                                chi
+                                                tiết</a>
+                                        </div>
+                                    </li>
+                                </th:block>
+                                <li th:if="${#lists.isEmpty(listRecentBank)}" style="text-align: center; color: #888;">
+                                    Không
+                                    có dữ liệu trong khoảng này</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12">
+                        <div class="dashboard-list-box invoices with-icons margin-top-20">
+                            <h4>Thanh toán khi nhận hàng (COD)</h4>
+                            <ul>
+                                <th:block th:each="y : ${listRecentDelivery}">
+                                    <li><i class="list-box-icon sl sl-icon-basket"></i>
+                                        <strong th:text="${y.user != null ? y.user.username : 'Ẩn danh'}"></strong>
+                                        <ul>
+                                            <li class="paid"
+                                                th:text="${#numbers.formatDecimal(y.total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                                            </li>
+                                            <li th:text="'Mã đơn: #'+${y.id}"></li>
+                                            <li
+                                                th:text="'Ngày đặt: ' + ${#temporals.format(y.booking_Date, 'dd/MM/yyyy')}">
+                                            </li>
+                                        </ul>
+                                        <div class="buttons-to-right">
+                                            <a th:href="@{/dashboard-invoice/{id}(id=${y.id})}" class="button gray">Xem
+                                                chi
+                                                tiết</a>
+                                        </div>
+                                    </li>
+                                </th:block>
+                                <li th:if="${#lists.isEmpty(listRecentDelivery)}"
+                                    style="text-align: center; color: #888;">
+                                    Không có dữ liệu trong khoảng này</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script th:inline="javascript">
+                const labels = /*[[${chartLabels}]]*/[];
+                const revenueData = /*[[${chartRevenue}]]*/[];
+
+                const ctx = document.getElementById('revenueChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Doanh thu (VNĐ)',
+                                data: revenueData,
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1,
+                                yAxisID: 'yRevenue',
+                                type: 'bar'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            yRevenue: {
+                                type: 'linear',
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Doanh thu (VNĐ)'
+                                },
+                                ticks: {
+                                    callback: function (value) {
+                                        return value.toLocaleString('vi-VN');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            </script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+            <script>
+                document.getElementById('btn-export-pdf').addEventListener('click', function () {
+                    const element = document.getElementById('report-content');
+
+                    const opt = {
+                        margin: [10, 10, 10, 10],
+                        filename: 'Bao_Cao_Doanh_Thu.pdf',
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2, useCORS: true },
+                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    };
+
+                    html2pdf().set(opt).from(element).save();
+                });
+            </script>
+        </th:block>
+    </th:block>
+</body>
+
+</html>

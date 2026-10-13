@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+    <th:block th:replace="layout/admin-layout :: layout">
+        <th:block th:fragment="pageContent">
+            <form action="dashboard-addcategory" method="post" enctype="multipart/form-data">
+                <div id="titlebar">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2>Thêm loại sản phẩm</h2>
+                            <nav id="breadcrumbs">
+                                <ul>
+                                    <li><a href="#">Trang chủ</a></li>
+                                    <li><a href="#">Bảng điều khiển</a></li>
+                                    <li>Thêm loại sản phẩm</li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="add-listing">
+                            <div class="add-listing-section">
+                                <div class="add-listing-headline">
+                                    <h3>
+                                        <i class="sl sl-icon-doc"></i> Thông tin cơ bản
+                                    </h3>
+                                </div>
+
+                                <div class="row with-forms">
+                                    <div class="col-md-12">
+                                        <h5>Tên loại sản phẩm</h5>
+                                        <input name="category_name" class="search-field" type="text" value=""
+                                            placeholder="Nhập tên loại sản phẩm" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="button preview">
+                                Thêm mới <i class="fa fa-arrow-circle-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="copyrights"></div>
+                    </div>
+                </div>
+            </form>
+        </th:block>
+    </th:block>
+
+    <script>
+        $(".opening-day.js-demo-hours .chosen-select").each(
+            function () {
+                $(this).append(
+                    '' + '<option></option>'
+                    + '<option>Đóng cửa</option>'
+                    + '<option>1 SA</option>'
+                    + '<option>2 SA</option>'
+                    + '<option>3 SA</option>'
+                    + '<option>4 SA</option>'
+                    + '<option>5 SA</option>'
+                    + '<option>6 SA</option>'
+                    + '<option>7 SA</option>'
+                    + '<option>8 SA</option>'
+                    + '<option>9 SA</option>'
+                    + '<option>10 SA</option>'
+                    + '<option>11 SA</option>'
+                    + '<option>12 CH</option>'
+                    + '<option>1 CH</option>'
+                    + '<option>2 CH</option>'
+                    + '<option>3 CH</option>'
+                    + '<option>4 CH</option>'
+                    + '<option>5 CH</option>'
+                    + '<option>6 CH</option>'
+                    + '<option>7 CH</option>'
+                    + '<option>8 CH</option>'
+                    + '<option>9 CH</option>'
+                    + '<option>10 CH</option>'
+                    + '<option>11 CH</option>'
+                    + '<option>12 SA</option>');
+            });
+    </script>
+
+    <script type="text/javascript" src="scripts/dropzone.js"></script>
+
+
+</body>
+
+</html>

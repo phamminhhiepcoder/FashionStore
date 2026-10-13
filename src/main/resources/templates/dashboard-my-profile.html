@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+	<th:block th:replace="layout/admin-layout :: layout">
+		<th:block th:fragment="pageContent">
+			<script th:if="${ChangePassSuccess!= null}">
+				swal("Đổi mật khẩu thành công", "", "success");
+			</script>
+			<div id="titlebar">
+				<div class="row">
+					<div class="col-md-12">
+						<h2>Hồ sơ của tôi</h2>
+						<nav id="breadcrumbs">
+							<ul>
+								<li><a href="#">Trang chủ</a></li>
+								<li><a href="#">Bảng điều khiển</a></li>
+								<li>Hồ sơ của tôi</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+
+				<div class="col-lg-6 col-md-12">
+					<form action="/dashboard-myprofile/changeProfile" method="POST" enctype="multipart/form-data">
+						<div class="dashboard-list-box margin-top-0">
+							<h4 class="gray">Chi tiết hồ sơ</h4>
+							<div class="dashboard-list-box-static">
+								<div class="edit-profile-photo">
+									<img th:src="${admin.avatar}" alt="">
+									<div class="change-photo-btn">
+										<div class="photoUpload">
+											<span><i class="fa fa-upload"></i> Tải ảnh lên</span> <input name="avatar"
+												type="file" accept="image/*" class="upload" />
+										</div>
+									</div>
+								</div>
+
+								<div class="my-profile">
+
+									<label>Họ và tên</label> <input name="fullname" th:value="${admin.username}"
+										type="text"> <label>Số điện thoại</label> <input name="phone"
+										th:value="${admin.phone_Number}" type="text"> <label>Email</label>
+									<input name="email" th:value="${admin.email}" type="text">
+								</div>
+								<span style="color: green;" th:if="${messageChangeProfile != null}"
+									th:text="${messageChangeProfile}"></span><br>
+								<button class="button margin-top-15">Lưu thay đổi</button>
+
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="col-lg-6 col-md-12">
+					<form action="/dashboard-myprofile/changepassword" method="post">
+						<div class="dashboard-list-box margin-top-0">
+							<h4 class="gray">Đổi mật khẩu</h4>
+							<div class="dashboard-list-box-static">
+
+								<div class="my-profile">
+									<label class="margin-top-0">Mật khẩu hiện tại</label> <input name="current_password"
+										type="password"> <label>Mật khẩu mới</label> <input name="new_password"
+										type="password">
+									<label>Xác nhận mật khẩu mới</label> <input name="confirm_password" type="password">
+									<p th:if="${error_change_pass!=null}" style="color: red;"
+										th:text="${error_change_pass}"></p>
+									<button type="submit" class="button margin-top-15">Đổi mật khẩu</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="col-md-12">
+					<div class="copyrights"></div>
+				</div>
+			</div>
+		</th:block>
+	</th:block>
+</body>
+
+</html>

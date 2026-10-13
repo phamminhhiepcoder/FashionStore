@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>FashionStore Shop</title>
+	<link rel="icon" href="/img/logo-3.png">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<!-- Font-->
+	<link rel="stylesheet" type="text/css" href="/colorlib-regform-33/css/opensans-font.css">
+	<link rel="stylesheet" type="text/css" href="/colorlib-regform-33/fonts/line-awesome/css/line-awesome.min.css">
+	<!-- Jquery -->
+	<link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+	<!-- Main Style Css -->
+	<link rel="stylesheet" href="/colorlib-regform-33/css/style.css" />
+</head>
+
+<body class="form-v7">
+
+	<div class="page-content">
+		<div class="form-v7-content">
+			<div class="form-left">
+				<img src="/colorlib-regform-33/images/form-v7.jpg" alt="form">
+				<p class="text-1">Nhập OTP xác nhận đăng ký</p>
+				<p class="text-2">OTP đã được gửi về email của bạn, hãy check</p>
+			</div>
+			<form th:action="@{/signup-verify}" method="post" class="form-detail" id="myform">
+				<div class="form-row">
+					<label for="code_input">OTP</label> <input type="text" name="code_input" id="code_input"
+						class="input-text">
+				</div>
+				<div th:if="${errorOTP != null}">
+					<p style="color: red;" th:text="${errorOTP}"></p>
+				</div>
+				<div class="form-row-last">
+					<input type="submit" name="confirm" class="confirm" value="Xác nhận">
+					<p>
+						Hoặc<a th:href="@{/}">Quay lại trang chủ</a>
+					</p>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+</body>
+
+</html>

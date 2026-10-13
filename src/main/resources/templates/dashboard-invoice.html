@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>FashionStore Shop</title>
+	<link rel="icon" href="/img/logo-3.png">
+	<link rel="stylesheet" href="/css/invoice.css">
+</head>
+
+<body>
+
+	<div style="display: flex;">
+		<a th:href="@{/dashboard-orders}" class="print-button">Quay Lại</a>
+		<a href="javascript:window.print()" class="print-button">In hoá đơn</a>
+	</div>
+
+	<div id="invoice">
+
+		<div class="row">
+			<div class="col-md-6">
+				<div id="logo">
+					<img th:src="@{/img/logo.png}" alt="">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<p id="details">
+					<strong>Đơn hàng: </strong><i th:text="'#' + ${order.id}"></i><br>
+					<strong>Ngày lập: </strong><i
+						th:text="${#temporals.format(order.booking_Date, 'dd-MM-yyyy')}"></i><br>
+					Hạn thanh toán trong vòng 7 ngày kể từ ngày lập
+				</p>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Hóa Đơn Thanh Toán</h2>
+			</div>
+
+			<div class="col-md-6">
+				<strong class="margin-bottom-5">Đơn vị cung cấp</strong>
+				<p>
+					FashionStore Shop <br> P. Nguyễn Trác, Dương Nội, Hà Nội <br>
+				</p>
+			</div>
+
+			<div class="col-md-6">
+				<strong class="margin-bottom-5">Khách hàng</strong>
+				<p>
+					<i th:text="${order.fullname}"></i> <br>
+					<i th:text="'SĐT: ' + ${order.phone}"></i> <br>
+					<i th:text="'Email: ' + ${order.email}"></i> <br>
+					<i th:text="'Quốc gia: ' + ${order.country}"></i> <br>
+					<i th:text="'Ghi chú: ' + ${order.note}"></i> <br>
+				</p>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<table class="margin-top-20">
+					<tr>
+						<th>Mô tả sản phẩm</th>
+						<th>Số lượng</th>
+						<th>Thành tiền</th>
+					</tr>
+					<th:block th:each="y: ${listOrder_Item}">
+						<tr>
+							<td th:text="${y.variant.product.productName}"></td>
+							<td th:text="${y.count}"></td>
+							<td
+								th:text="${#numbers.formatDecimal(y.variant.price * y.count, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+							</td>
+						</tr>
+					</th:block>
+				</table>
+
+				<p>
+					<strong class="margin-bottom-5">Địa chỉ giao hàng: </strong>
+					<i th:text="${order.address}"></i><br>
+					<strong class="margin-bottom-5">Phương thức thanh toán: </strong>
+					<i
+						th:text="${order.payment_Method == 'Payment on delivery' ? 'Thanh toán khi nhận hàng' : 'Thanh toán online'}"></i>
+				</p>
+			</div>
+
+			<div class="col-md-4 col-md-offset-8">
+				<table id="totals">
+					<tr>
+						<th>Tổng tiền thanh toán</th>
+						<th><span
+								th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+						</th>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<ul id="footer">
+					<li><span>www.example.com</span></li>
+					<li>FashionStore@gmail.com</li>
+					<li>0799 197 703</li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+
+</html>

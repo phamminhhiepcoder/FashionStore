@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        .shop__sidebar__categories ul li.active a {
+            color: #e53637;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <th:block th:replace="layout/user-layout :: layout">
+        <th:block th:fragment="pageContent">
+            <section class="breadcrumb-option">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="breadcrumb__text">
+                                <h4>Sản phẩm</h4>
+                                <div class="breadcrumb__links">
+                                    <a th:href="@{/home}">Trang chủ</a>
+                                    <span>Sản phẩm</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="shop spad">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="shop__sidebar">
+                                <div class="shop__sidebar__filter-box">
+                                    <h5 class="filter-title">Bộ lọc sản phẩm</h5>
+                                    <form th:action="@{/shop}" method="get" class="filter-form">
+
+                                        <div class="filter-input-group">
+                                            <label class="filter-label"> Từ khóa</label>
+                                            <input type="text" name="keyword" placeholder="Tìm kiếm sản phẩm..."
+                                                th:value="${keyword}">
+                                        </div>
+
+                                        <input type="hidden" name="category" th:value="${category}">
+
+                                        <div class="filter-input-group mb-3">
+                                            <label class="filter-label"> Kích cỡ</label>
+                                            <select name="size" class="form-control">
+                                                <option value="">-- Tất cả kích cỡ --</option>
+                                                <option th:each="s : ${listSizes}" th:value="${s}" th:text="${s}"
+                                                    th:selected="${s == size}"></option>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <br>
+
+                                        <div class="filter-input-group mb-3">
+                                            <label class="filter-label"> Màu sắc</label>
+                                            <select name="color" class="form-control">
+                                                <option value="">-- Tất cả màu sắc --</option>
+                                                <option th:each="c : ${listColors}" th:value="${c}" th:text="${c}"
+                                                    th:selected="${c == color}"></option>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <div class="filter-input-group">
+                                            <label class="filter-label"> Khoảng giá (VNĐ)</label>
+                                            <div class="price-range-inputs">
+                                                <input type="number" name="minPrice"
+                                                    th:value="${minPrice.compareTo(T(java.math.BigDecimal).ZERO)==0 ? '' : minPrice}">
+                                                <span class="price-separator">-</span>
+                                                <input type="number" name="maxPrice"
+                                                    th:value="${maxPrice.compareTo(T(java.math.BigDecimal).valueOf(999999999999L))==0 ? '' : maxPrice}">
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn-filter-submit mt-3">
+                                            Áp dụng bộ lọc
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="shop__sidebar__accordion">
+                                    <div class="accordion" id="accordionExample">
+                                        <div class="card">
+                                            <div class="card-heading">
+                                                <a data-toggle="collapse" data-target="#collapseOne">Danh mục</a>
+                                            </div>
+                                            <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <div class="shop__sidebar__categories">
+                                                        <ul class="nice-scroll">
+                                                            <li>
+                                                                <a th:href="@{/shop(keyword=${keyword},
+        minPrice=${minPrice},
+        maxPrice=${maxPrice})}">
+                                                                    Tất cả sản phẩm
+                                                                </a>
+                                                            </li>
+                                                            <th:block th:each="y : ${listCategory}">
+                                                                <li
+                                                                    th:classappend="${category != null and category == y.id} ? 'active' : ''">
+                                                                    <a th:href="@{/shop(category=${y.id},
+                            keyword=${keyword},
+                            minPrice=${minPrice},
+                            maxPrice=${maxPrice})}" th:text="${y.category_Name}">
+                                                                    </a>
+                                                                </li>
+                                                            </th:block>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-9">
+                            <div class="shop__product__option">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="shop__product__option__left">
+                                            <p>
+                                                Hiển thị
+                                                <span th:text="${listProduct.number * 24 + 1}"></span>
+                                                -
+                                                <span
+                                                    th:text="${listProduct.number * 24 + listProduct.numberOfElements}"></span>
+                                                /
+                                                <span th:text="${TotalPro}"></span>
+                                                sản phẩm
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <th:block th:each="y : ${listProduct.content}">
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
+                                        <div class="product__item">
+                                            <div class="product__item__pic set-bg"
+                                                th:data-setbg="${#lists.isEmpty(y.mainImage) ? '/img/no-image.png' : y.mainImage}">
+                                                <ul class="product__hover">
+                                                    <li>
+                                                        <a th:href="@{/productDetail/{id}(id=${y.id})}">
+                                                            <img src="/img/icon/search.png" alt="">
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="product__item__text">
+                                                <h6 th:text="${y.productName}"></h6>
+                                                <a th:href="@{/productDetail/{id}(id=${y.id})}" class="add-cart">
+                                                    Xem chi tiết
+                                                </a>
+                                                <h5
+                                                    th:text="${#numbers.formatDecimal(y.minPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                                                </h5>
+                                                <div class="product__color__select">
+                                                    <label for="pc-4">
+                                                        <input type="radio" id="pc-4">
+                                                    </label>
+                                                    <label class="active black" for="pc-5">
+                                                        <input type="radio" id="pc-5">
+                                                    </label>
+                                                    <label class="grey" for="pc-6">
+                                                        <input type="radio" id="pc-6">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="product__pagination">
+                                        <a th:if="${listProduct.hasPrevious()}" th:href="@{/shop(page=0, keyword=${keyword}, category=${category},
+    minPrice=${minPrice},
+    maxPrice=${maxPrice})}">
+                                            &lt;&lt;
+                                        </a>
+
+                                        <a th:if="${listProduct.hasPrevious()}" th:href="@{/shop(page=${listProduct.number - 1}, keyword=${keyword}, category=${category},
+    minPrice=${minPrice},
+    maxPrice=${maxPrice})}">
+                                            &lt;
+                                        </a>
+
+                                        <span class="active" th:text="${listProduct.number + 1}"></span>
+
+                                        <a th:if="${listProduct.hasNext()}" th:href="@{/shop(page=${listProduct.number + 1}, keyword=${keyword}, category=${category},
+    minPrice=${minPrice},
+    maxPrice=${maxPrice})}">
+                                            &gt;
+                                        </a>
+
+                                        <a th:if="${listProduct.hasNext()}" th:href="@{/shop(page=${listProduct.totalPages - 1}, keyword=${keyword}, category=${category},
+    minPrice=${minPrice},
+    maxPrice=${maxPrice})}">
+                                            &gt;&gt;
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </th:block>
+    </th:block>
+</body>
+
+</html>

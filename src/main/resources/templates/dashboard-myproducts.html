@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+    <th:block th:replace="layout/admin-layout :: layout">
+        <th:block th:fragment="pageContent">
+            <style>
+                .custom-alert {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 16px 20px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    border-radius: 10px;
+                    border: none;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                    margin-bottom: 24px;
+                    transition: all 0.3s ease;
+                }
+
+                .alert-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+
+                .alert-text {
+                    font-size: 16px;
+                    line-height: 1.5;
+                }
+
+                .alert-icon {
+                    width: 24px;
+                    height: 24px;
+                    flex-shrink: 0;
+                }
+
+                .alert-success {
+                    background-color: #e8f5e9;
+                    color: #2e7d32;
+                    border-left: 5px solid #2e7d32;
+                }
+
+                .alert-danger {
+                    background-color: #ffebee;
+                    color: #c62828;
+                    border-left: 5px solid #c62828;
+                }
+
+                .custom-close {
+                    font-size: 24px;
+                    line-height: 1;
+                    opacity: 0.6;
+                    padding: 0;
+                    margin: 0;
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+                    transition: opacity 0.2s ease;
+                }
+
+                .custom-close:hover {
+                    opacity: 1;
+                }
+            </style>
+
+            <div th:if="${message}"
+                th:class="'alert alert-' + ${messageType} + ' alert-dismissible fade show custom-alert'" role="alert">
+                <div class="alert-content">
+                    <svg th:if="${messageType == 'success'}" class="alert-icon" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <svg th:if="${messageType == 'danger'}" class="alert-icon" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span th:text="${message}" class="alert-text"></span>
+                </div>
+                <button type="button" class="close custom-close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="titlebar">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Danh sách Sản phẩm</h2>
+                        <nav id="breadcrumbs">
+                            <ul>
+                                <li><a href="#">Trang chủ</a></li>
+                                <li><a href="#">Bảng điều khiển</a></li>
+                                <li>Danh sách Sản phẩm</li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <form action="/dashboard-myproduct/search" method="Post">
+                <div class="main-search-input" style="margin-bottom: 30px; justify-content: space-between;">
+
+                    <div class="main-search-input-item" style="flex: 1">
+                        <input name="search-input" type="text" placeholder="Tìm kiếm sản phẩm..."
+                            th:value="${search_input}">
+                    </div>
+                    <div style="display: flex;">
+                        <div class="main-search-input-item">
+
+                            <select name="category-selected" data-placeholder="Tất cả danh mục" class="chosen-select">
+                                <option th:value="0">Tất cả danh mục</option>
+                                <th:block th:each="y : ${listCategories}">
+                                    <option th:value="${y.id}" th:text="${y.category_Name}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+
+                        <button class="button" type="submit">Tìm kiếm</button>
+                    </div>
+
+                </div>
+            </form>
+            <div class="row">
+
+                <div class="col-lg-12 col-md-12">
+                    <div class="dashboard-list-box margin-top-0">
+                        <h4>Danh sách Sản phẩm</h4>
+                        <ul>
+                            <th:block th:each="y : ${pageProduct.content}">
+                                <li>
+                                    <div class="list-box-listing">
+                                        <div class="list-box-listing-img">
+                                            <a href="#"><img th:src="${y.mainImage}" alt=""></a>
+                                        </div>
+                                        <div class="list-box-listing-content">
+                                            <div class="inner">
+                                                <h3>
+                                                    <a href="#" th:text="${y.productName}"></a>
+                                                </h3>
+                                                <span th:text="'Danh mục: ' + ${y.category.category_Name}"></span><br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="buttons-to-right">
+                                        <a th:href="@{/dashboard-myproducts/variants/{id}(id=${y.id})}"
+                                            class="button gray"><i class="sl sl-icon-note"></i> Tồn kho</a>
+                                        <a th:href="@{/dashboard-myproducts/edit/{id}(id=${y.id})}"
+                                            class="button gray"><i class="sl sl-icon-note"></i> Sửa</a>
+                                        <a th:href="@{/dashboard-myproducts/delete/{id}(id=${y.id})}"
+                                            class="button gray"><i class="sl sl-icon-close"></i> Xóa</a>
+                                    </div>
+                                </li>
+                            </th:block>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <div th:if="${search_dashboard==null}" class="row">
+                    <div class="col-md-12">
+                        <div class="pagination-container margin-top-20 margin-bottom-40">
+                            <nav class="pagination">
+                                <ul>
+                                    <li><a class="paging-item" th:if="${pageProduct.number} > 0"
+                                            th:href="@{/dashboard-myproducts/{page}(page=${pageProduct.number - 1})}"><i
+                                                class="sl sl-icon-arrow-left"></i></a></li>
+                                    <li><a class="paging-item"
+                                            th:href="@{/dashboard-myproducts/{page}(page=${pageProduct.number})}"
+                                            th:text="${pageProduct.number+1}"></a></li>
+                                    <li><a class="paging-item"
+                                            th:if="${pageProduct.number} < ${pageProduct.totalPages - 1}"
+                                            th:href="@{/dashboard-myproducts/{page}(page=${pageProduct.number + 1})}"><i
+                                                class="sl sl-icon-arrow-right"></i></a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${search_dashboard !=null}" class="row">
+                    <div class="col-md-12">
+                        <div class="pagination-container margin-top-20 margin-bottom-40">
+                            <nav class="pagination">
+                                <ul>
+                                    <li><a th:if="${pageProduct.number} > 0"
+                                            th:href="@{/dashboard-myproduct/search/{page}(page=${pageProduct.number - 1})}"><i
+                                                class="sl sl-icon-arrow-left"></i></a></li>
+                                    <li><a th:href="@{/dashboard-myproduct/search/{page}(page=${pageProduct.number})}"
+                                            class="current-page" th:text="${pageProduct.number+1}"></a></li>
+                                    <li><a th:if="${pageProduct.number} < ${pageProduct.totalPages - 1}"
+                                            th:href="@{/dashboard-myproduct/search/{page}(page=${pageProduct.number + 1})}"><i
+                                                class="sl sl-icon-arrow-right"></i></a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </th:block>
+    </th:block>
+</body>
+
+</html>

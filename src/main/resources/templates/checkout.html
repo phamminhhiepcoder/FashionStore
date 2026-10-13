@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en-US" xmlns:th="www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<th:block th:replace="layout/user-layout :: layout">
+    <th:block th:fragment="pageContent">
+        <section class="breadcrumb-option">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="breadcrumb__text">
+                            <h4>Đặt Hàng</h4>
+                            <div class="breadcrumb__links">
+                                <a th:href="@{/home}">Trang chủ</a> <a th:href="@{/shop}">Shop</a>
+                                <span>Đặt Hàng</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="checkout spad">
+            <div class="container">
+                <div class="checkout__form">
+                    <form action="checkout" method="post">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-6">
+                                <h6 class="checkout__title">Thông tin đặt hàng</h6>
+                                <div class="checkout__input">
+                                    <p>Họ Tên<span>*</span></p>
+                                    <input name="fullname" type="text" required th:value="${session.acc.username}" />
+                                </div>
+                                <div class="checkout__input">
+                                    <p>Quốc gia<span>*</span></p>
+                                    <input name="country" type="text" placeholder="Country" required />
+                                </div>
+                                <div class="checkout__input">
+                                    <p>Địa chỉ<span>*</span></p>
+                                    <input name="address" type="text" placeholder="Address"
+                                        class="checkout__input__add" required />
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="checkout__input">
+                                            <p>Điện thoại<span>*</span></p>
+                                            <input name="phone" type="text" required th:value="${session.acc.phone_Number}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="checkout__input">
+                                            <p>Email<span>*</span></p>
+                                            <input name="email" type="text" required th:value="${session.acc.email}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="checkout__input">
+                                    <p>Ghi chú<span>*</span></p>
+                                    <input name="note" type="text" required
+                                        placeholder="Notes about your order, e.g. special notes for delivery." />
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="checkout__order">
+                                    <h4 class="order__title">Đơn Hàng</h4>
+                                    <div class="checkout__order__products">
+                                        <span>Sản Phẩm</span>
+                                    </div>
+                                    <ul class="checkout__total__products">
+                                        <th:block th:if="${yStat.index < 10}" th:each="y : ${listCart}">
+                                            <div>
+                                                <li
+                                                    th:text="'0'+ ${yStat.index +1} + '. ' + ${y.variant.product.productName} + '  ' + ${y.variant.size} + ' - ' + ${y.variant.color}">
+                                                </li>
+                                                <span
+                                                    th:text="${#numbers.formatDecimal(y.variant.price * y.count, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                                            </div>
+                                        </th:block>
+                                        <th:block th:if="${yStat.index >= 10}" th:each="y : ${listCart}">
+                                            <li
+                                                th:text="${yStat.index +1} + '. ' + ${y.variant.product.productName} + '  ' + ${y.size.sizeName}">
+                                                <span
+                                                    th:text="${#numbers.formatDecimal(y.variant.price * y.count, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                                            </li>
+                                        </th:block>
+                                    </ul>
+                                    <ul class="checkout__total__all">
+                                        <li>
+                                            Tổng cộng
+                                            <span
+                                                th:text="${#numbers.formatDecimal(Total, 0, 'COMMA', 0, 'POINT')}"></span>
+                                        </li>
+                                    </ul>
+                                    <div class="checkout__input__checkbox">
+                                        <label for="payment">
+                                            Thanh toán khi nhận hàng
+                                            <input type="radio" id="payment" name="payment" value="cod" />
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="checkout__input__checkbox">
+                                        <label for="bank">
+                                            Thanh toán bằng chuyển khoản
+                                            <input type="radio" id="bank" name="payment" value="bank" />
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <button type="submit" class="site-btn">ĐẶT HÀNG</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </th:block>
+</th:block>
+</body>
+
+</html>

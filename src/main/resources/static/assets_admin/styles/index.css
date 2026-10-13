@@ -1,0 +1,95 @@
+body {
+    font-size: 14px;
+}
+
+.filter-box {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.filter-select {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.badge-custom {
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 12px;
+    display: inline-block;
+}
+
+.badge-danger {
+    background-color: #f93154;
+}
+
+.badge-warning {
+    background-color: #ffa900;
+}
+
+.badge-success {
+    background-color: #00b74a;
+}
+
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.table-custom th,
+.table-custom td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.table-custom th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 15px;
+    gap: 5px;
+}
+
+.pagination-btn {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(.disabled):not(.active) {
+    background-color: #f1f1f1;
+    border-color: #ccc;
+}
+
+.pagination-btn.active {
+    background-color: #66676b;
+    color: #fff;
+    border-color: #66676b;
+    font-weight: bold;
+}
+
+.pagination-btn.disabled {
+    color: #ccc;
+    cursor: not-allowed;
+    border-color: #eee;
+}

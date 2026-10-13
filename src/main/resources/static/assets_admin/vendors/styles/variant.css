@@ -1,0 +1,124 @@
+.pv-manager-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.pv-manager-title {
+    margin-bottom: 5px;
+    color: #222;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.pv-manager-subtitle {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.pv-alert-success {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    border-left: 4px solid #28a745;
+}
+
+.pv-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.pv-table th {
+    background: #f4f4f6;
+    text-align: left;
+    padding: 12px;
+    font-size: 14px;
+    color: #555;
+    border-bottom: 2px solid #ddd;
+}
+
+.pv-table td {
+    padding: 10px 6px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.pv-form-control {
+    width: 90%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.pv-form-control:focus {
+    border-color: #666;
+    outline: none;
+}
+
+.pv-btn {
+    padding: 9px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.pv-btn-add {
+    background: #28a745;
+    color: #fff;
+    margin-top: 15px;
+}
+
+.pv-btn-add:hover {
+    background: #218838;
+    color: #fff;
+}
+
+.pv-btn-submit {
+    background: #007bff;
+    color: #fff;
+    float: right;
+    padding: 12px 24px;
+}
+
+.pv-btn-submit:hover {
+    background: #0069d9;
+    color: #fff;
+}
+
+.pv-btn-delete {
+    background: #dc3545;
+    color: #fff;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.pv-btn-delete:hover {
+    background: #bd2130;
+    color: #fff;
+}
+
+.pv-actions-wrapper {
+    margin-top: 30px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.pv-clear {
+    clear: both;
+}

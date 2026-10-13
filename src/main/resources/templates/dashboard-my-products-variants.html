@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" th:href="@{/assets_admin/vendors/styles/variant.css}" />
+</head>
+
+<body>
+    <th:block th:replace="layout/admin-layout :: layout">
+        <th:block th:fragment="pageContent">
+            <style>
+                .custom-alert {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 16px 20px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    border-radius: 10px;
+                    border: none;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                    margin-bottom: 24px;
+                    transition: all 0.3s ease;
+                }
+
+                .alert-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+
+                .alert-text {
+                    font-size: 16px;
+                    line-height: 1.5;
+                }
+
+                .alert-icon {
+                    width: 24px;
+                    height: 24px;
+                    flex-shrink: 0;
+                }
+
+                .alert-success {
+                    background-color: #e8f5e9;
+                    color: #2e7d32;
+                    border-left: 5px solid #2e7d32;
+                }
+
+                .alert-danger {
+                    background-color: #ffebee;
+                    color: #c62828;
+                    border-left: 5px solid #c62828;
+                }
+
+                .custom-close {
+                    font-size: 24px;
+                    line-height: 1;
+                    opacity: 0.6;
+                    padding: 0;
+                    margin: 0;
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+                    transition: opacity 0.2s ease;
+                }
+
+                .custom-close:hover {
+                    opacity: 1;
+                }
+            </style>
+
+            <div th:if="${message}"
+                th:class="'alert alert-' + ${messageType} + ' alert-dismissible fade show custom-alert'" role="alert">
+                <div class="alert-content">
+                    <svg th:if="${messageType == 'success'}" class="alert-icon" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <svg th:if="${messageType == 'danger'}" class="alert-icon" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span th:text="${message}" class="alert-text"></span>
+                </div>
+                <button type="button" class="close custom-close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="pv-manager-container">
+                <h2 class="pv-manager-title">Cập nhật Biến thể Sản phẩm</h2>
+                <p class="pv-manager-subtitle">Sản phẩm gốc: <strong th:text="${product.productName}">Tên sản
+                        phẩm</strong> (Mã sản phẩm: <span th:text="${product.id}">0</span>)</p>
+
+
+                <form th:action="@{/dashboard-myproducts/variants}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="product_id" th:value="${product.id}">
+
+                    <table class="pv-table" id="pvVariantTable">
+                        <thead>
+                            <tr>
+                                <th>Ảnh minh hoạ</th>
+                                <th>Màu sắc</th>
+                                <th>Kích thước</th>
+                                <th>Số lượng kho</th>
+                                <th>Giá nhập (VND)</th>
+                                <th>Giá bán riêng (VND)</th>
+                                <th style="width: 100px;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="v : ${listVariants}">
+                                <td>
+                                    <input type="hidden" name="variant_id" th:value="${v.id}">
+
+                                    <!-- Hiển thị ảnh hiện tại nếu có -->
+                                    <div style="margin-bottom: 5px;">
+                                        <img th:if="${v.productImage != null and !v.productImage.isEmpty()}"
+                                            th:src="${v.productImage[0].url_Image}"
+                                            style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;" />
+                                    </div>
+                                    <input type="file" name="variant_image" accept="image/*" class="pv-form-control"
+                                        style="font-size: 11px; padding: 3px;">
+                                </td>
+                                <td>
+                                    <input type="text" name="variant_color" th:value="${v.color}"
+                                        class="pv-form-control" placeholder="Ví dụ: Đỏ, Xanh..." required>
+                                </td>
+                                <td>
+                                    <input type="text" name="variant_size" th:value="${v.size}" class="pv-form-control"
+                                        placeholder="Ví dụ: S, M, L, XL..." required>
+                                </td>
+                                <td>
+                                    <input type="number" name="variant_quantity" th:value="${v.quantity}"
+                                        class="pv-form-control" min="0" placeholder="0" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="variant_import_price" th:value="${v.importPrice}"
+                                        class="pv-form-control">
+                                </td>
+                                <td>
+                                    <input type="text" name="variant_price" th:value="${v.price}"
+                                        class="pv-form-control">
+                                </td>
+                                <td>
+                                    <a th:href="@{/dashboard-myproducts/variants/delete/{vId}(vId=${v.id}, product_id=${product.id})}"
+                                        class="pv-btn pv-btn-delete"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn biến thể này?')">Xóa</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <button type="button" class="pv-btn pv-btn-add" onclick="addVariantRow()">+ Thêm hàng biến thể
+                        mới</button>
+
+                    <div class="pv-actions-wrapper">
+                        <button type="submit" class="pv-btn pv-btn-submit">Lưu toàn bộ biến thể</button>
+                        <div class="pv-clear"></div>
+                    </div>
+                </form>
+            </div>
+
+            <script>
+                function addVariantRow() {
+                    var tableBody = document.querySelector("#pvVariantTable tbody");
+                    var newRow = document.createElement("tr");
+
+                    newRow.innerHTML = `
+                        <td>
+                            <input type="hidden" name="variant_id" value="0">
+                            <input type="file" name="variant_image" accept="image/*" class="pv-form-control" style="font-size: 11px; padding: 3px;">
+                        </td>
+                        <td>
+                            <input type="text" name="variant_color" class="pv-form-control" placeholder="Ví dụ: Đen, Trắng..." required>
+                        </td>
+                        <td>
+                            <input type="text" name="variant_size" class="pv-form-control" placeholder="Ví dụ: M, L..." required>
+                        </td>
+                        <td>
+                            <input type="number" name="variant_quantity" class="pv-form-control" value="0" min="0" required>
+                        </td>
+                        <td>
+                            <input type="text" name="variant_import_price" class="pv-form-control" placeholder="100000">
+                        </td>
+                        <td>
+                            <input type="text" name="variant_price" class="pv-form-control" placeholder="150000">
+                        </td>
+                        <td>
+                            <button type="button" class="pv-btn pv-btn-delete" onclick="removeTempRow(this)">Xóa</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(newRow);
+                }
+
+                function removeTempRow(button) {
+                    var row = button.closest("tr");
+                    row.remove();
+                }
+            </script>
+        </th:block>
+    </th:block>
+</body>
+
+</html>

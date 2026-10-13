@@ -1,0 +1,80 @@
+<th:block th:fragment="header">
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-7">
+                        <div class="header__top__left">
+                            <p>Free ship, lỗi đổi mới trong 30 ngày đầu.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-5">
+                        <div class="header__top__right">
+                            <div class="header__top__links">
+                                <a th:if="${session.acc == null}" th:href="@{/signin}">Đăng Nhập</a>
+                                <a th:if="${session.acc != null}" th:text="${session.acc.username}"
+                                    style="color: white;"></a>
+                                <a th:if="${session.acc != null}" th:href="@{/signout}">Đăng xuất</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__logo">
+                        <a th:href="@{/home}"><img src="https://images.seeklogo.com/logo-png/29/1/fashion-shop-clothes-hanger-logo-png_seeklogo-297533.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            <li th:classappend="${#httpServletRequest.requestURI == '/home'} ? 'active'"><a
+                                    th:href="@{/home}">Trang chủ</a></li>
+
+                            <li class="mega-menu-container">
+                                <a href="#">Danh mục <i class="arrow_carrot-down"></i></a>
+                                <div class="mega-menu-wrapper">
+                                    <div class="row" id="mega-menu-row">
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li th:classappend="${#httpServletRequest.requestURI == '/shop'} ? 'active'"><a
+                                    th:href="@{/shop}">Shop</a></li>
+                            <li><a href="#">Các Trang Khác</a>
+                                <ul class="dropdown">
+                                    <li><a th:if="${session.acc != null}" th:href="@{/myprofile}">Tài Khoản</a></li>
+                                    <li><a th:if="${session.acc != null}" th:href="@{/myhistory}">Lịch Sử Mua Hàng</a>
+                                    </li>
+                                    <li><a th:href="@{/about}">Về Chúng Tôi</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__nav__option d-flex align-items-center">
+                        <form th:action="@{/shop}" method="get" class="header-search-form">
+                            <input type="text" name="keyword" placeholder="Tìm sản phẩm..." th:value="${keyword}">
+                            <button type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </form>
+
+                        <a th:href="@{/cart}" class="cart-icon">
+                            <img th:src="@{/img/icon/cart.png}" alt="">
+                            <span th:text="${session.countCart}"></span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+</th:block>

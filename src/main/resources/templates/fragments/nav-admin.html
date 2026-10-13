@@ -1,0 +1,53 @@
+<th:block th:fragment="nav">
+    <a href="#" class="dashboard-responsive-nav-trigger"><i class="fa fa-reorder"></i> Điều hướng Admin</a>
+
+    <div class="dashboard-nav">
+        <div class="dashboard-nav-inner">
+
+            <ul data-submenu-title="Thống kê">
+                <li th:classappend="${#httpServletRequest.requestURI == '/dashboard'} ? 'active'"><a
+                        th:href="@{/dashboard}"><i class="sl sl-icon-settings"></i>Tổng quan</a></li>
+                <li th:classappend="${#httpServletRequest.requestURI == '/dashboard-orders'} ? 'active'"><a
+                        th:href="@{/dashboard-orders}"><i class="fa fa-calendar-check-o"></i> Đơn hàng</a></li>
+                <li th:classappend="${#httpServletRequest.requestURI == '/dashboard-wallet'} ? 'active'"><a
+                        th:href="@{/dashboard-wallet}"><i class="sl sl-icon-wallet"></i> Doanh thu</a></li>
+            </ul>
+
+            <ul data-submenu-title="Sản phẩm">
+                <li th:classappend="${#httpServletRequest.requestURI == '/dashboard-myproducts'} ? 'active'"><a
+                        th:href="@{/dashboard-myproducts}"><i class="sl sl-icon-layers"></i> Danh sách Sản phẩm</a></li>
+                <li><a th:href="@{/dashboard-addproduct}"
+                        th:classappend="${#httpServletRequest.requestURI == '/dashboard-addproduct'} ? 'active'"><i
+                            class="sl sl-icon-plus"></i> Thêm sản phẩm</a></li>
+            </ul>
+
+            <ul data-submenu-title="Loại sản phẩm">
+                <li th:classappend="${#httpServletRequest.requestURI == '/dashboard-categories'} ? 'active'"><a
+                        th:href="@{/dashboard-categories}"><i class="sl sl-icon-layers"></i> Danh sách Loại Sản phẩm</a>
+                </li>
+                <li><a th:href="@{/dashboard-addcategory}"
+                        th:classappend="${#httpServletRequest.requestURI == '/dashboard-addcategory'} ? 'active'"><i
+                            class="sl sl-icon-plus"></i> Thêm loại sản phẩm</a></li>
+            </ul>
+
+            <ul data-submenu-title="Người dùng">
+                <li th:classappend="${#httpServletRequest.requestURI == '/dashboard-users'} ? 'active'"><a
+                        th:href="@{/dashboard-users}"><i class="sl sl-icon-layers"></i> Danh sách người dùng</a>
+                </li>
+                <li><a th:href="@{/dashboard-adduser}"
+                        th:classappend="${#httpServletRequest.requestURI == '/dashboard-adduser'} ? 'active'"><i
+                            class="sl sl-icon-plus"></i> Thêm người dùng</a></li>
+            </ul>
+
+            <ul data-submenu-title="Tài khoản">
+                <li th:classappend="${#httpServletRequest.requestURI == '/dashboard-myprofile'} ? 'active'"><a
+                        th:href="@{/dashboard-myprofile}"><i class="sl sl-icon-user"></i> Hồ sơ của tôi</a></li>
+                <li><a th:href="@{/logout-admin}"><i class="sl sl-icon-power"></i> Đăng xuất</a></li>
+            </ul>
+
+            <ul data-submenu-title="">
+                <li><a th:href="@{/home}"><i class="im im-icon-Home"></i> Quay lại Trang chủ</a></li>
+            </ul>
+        </div>
+    </div>
+</th:block>

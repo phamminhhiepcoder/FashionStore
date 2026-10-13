@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en-US" xmlns:th="www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<th:block th:replace="layout/user-layout :: layout">
+	<th:block th:fragment="pageContent">
+		<section class="breadcrumb-option">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="breadcrumb__text">
+							<h4>Giỏ hàng</h4>
+							<div class="breadcrumb__links">
+								<a th:href="@{/home}">Trang chủ</a> <a th:href="@{/shop}">Shop</a> <span>Giỏ hàng</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="shopping-cart spad">
+			<div class="container">
+				<form action="" method="POST" enctype="multipart/form-data">
+					<div class="row">
+						<div class="col-lg-8">
+							<div class="shopping__cart__table">
+								<table>
+									<thead>
+										<tr>
+											<th>Sản phẩm</th>
+											<th>Số lượng</th>
+											<th>Size</th>
+											<th>Màu</th>
+											<th>Tổng giá</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:each="y, yStat : ${listCart}">
+											<tr>
+												<td class="product__cart__item">
+													<div style="max-width: 90px; max-height: 90px;"
+														class="product__cart__item__pic">
+														<img th:src="${y.variant.productImage[0].url_Image}"
+															alt="">
+													</div>
+
+													<div class="product__cart__item__text">
+														<h6 th:text="${y.variant.product.productName}"></h6>
+														<h5
+															th:text="${#numbers.formatDecimal(y.variant.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+														</h5>
+													</div>
+												</td>
+												<td class="quantity__item">
+													<div class="quantity">
+														<div class="pro-qty-2">
+															<input th:name="'count'+${yStat.index}" type="number"
+																th:value="${y.count}">
+														</div>
+													</div>
+												</td>
+												<td>
+													<span class="badge bg-info text-dark px-3 py-2 fs-6">
+														<i class="fa fa-ruler-combined me-1"></i>
+														<span th:text="${y.variant.size}"></span>
+													</span>
+												</td>
+
+												<td>
+													<span class="badge bg-info text-dark px-3 py-2 fs-6">
+														<i class="fa fa-ruler-combined me-1"></i>
+														<span th:text="${y.variant.color}"></span>
+													</span>
+												</td>
+
+
+												<td class="cart__price"
+													th:text="${#numbers.formatDecimal(y.variant.price * y.count, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+												</td>
+												<td class="cart__close"><a th:href="@{/deleteCart/{id}(id=${y.id})}"><i
+															class="fa fa-close"></i></a></td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>
+							</div>
+							<div class="row">
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="continue__btn">
+										<a th:href="@{/shop}">Tiếp tục mua sắm</a>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="continue__btn update__btn">
+										<button formaction="/updateCart">
+											<i class="fa fa-spinner"></i> Cập nhật
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="cart__total">
+								<h6>Sản phẩm</h6>
+								<ul>
+									<li>Khách hàng <span th:text="${session.acc.username}"></span></li>
+									<li>Tổng tiền <span
+											th:text="${#numbers.formatDecimal(Total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+									</li>
+								</ul>
+								<a th:href="@{/checkout}" class="primary-btn">Đặt Hàng</a>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</section>
+
+	</th:block>
+</th:block>
+</body>
+
+</html>

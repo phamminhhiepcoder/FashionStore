@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+	<th:block th:replace="layout/admin-layout :: layout">
+		<th:block th:fragment="pageContent">
+			<style>
+				body {
+					font-size: 14px;
+				}
+
+				.filter-box {
+					margin-bottom: 20px;
+					text-align: right;
+				}
+
+				.filter-select {
+					padding: 6px 12px;
+					border-radius: 4px;
+					border: 1px solid #ccc;
+					font-weight: 600;
+					cursor: pointer;
+				}
+
+				.badge-custom {
+					padding: 5px 10px;
+					border-radius: 4px;
+					color: #fff;
+					font-weight: 600;
+					font-size: 12px;
+					display: inline-block;
+				}
+
+				.badge-danger {
+					background-color: #f93154;
+				}
+
+				.badge-warning {
+					background-color: #ffa900;
+				}
+
+				.badge-success {
+					background-color: #00b74a;
+				}
+
+				.table-custom {
+					width: 100%;
+					border-collapse: collapse;
+					background: #fff;
+					border-radius: 5px;
+					overflow: hidden;
+					margin-top: 10px;
+				}
+
+				.table-custom th,
+				.table-custom td {
+					padding: 12px 15px;
+					text-align: left;
+					border-bottom: 1px solid #eee;
+				}
+
+				.table-custom th {
+					background-color: #f8f9fa;
+					font-weight: 600;
+				}
+
+				.pagination-container {
+					display: flex;
+					justify-content: flex-end;
+					align-items: center;
+					margin-top: 15px;
+					gap: 5px;
+				}
+
+				.pagination-btn {
+					padding: 6px 12px;
+					border: 1px solid #ddd;
+					background-color: #fff;
+					color: #333;
+					border-radius: 4px;
+					cursor: pointer;
+					font-size: 13px;
+					transition: all 0.2s ease;
+				}
+
+				.pagination-btn:hover:not(.disabled):not(.active) {
+					background-color: #f1f1f1;
+					border-color: #ccc;
+				}
+
+				.pagination-btn.active {
+					background-color: #66676b;
+					color: #fff;
+					border-color: #66676b;
+					font-weight: bold;
+				}
+
+				.pagination-btn.disabled {
+					color: #ccc;
+					cursor: not-allowed;
+					border-color: #eee;
+				}
+			</style>
+
+			<div id="titlebar">
+				<div class="row">
+					<div class="col-md-6">
+						<h2 th:text="'Xin chào, ' + ${session.admin.username + '!'}"></h2>
+						<nav id="breadcrumbs">
+							<ul>
+								<li><a href="#">Trang chủ</a></li>
+								<li>Bảng điều khiển</li>
+							</ul>
+						</nav>
+					</div>
+					<div class="col-md-6 filter-box">
+						<form method="GET" th:action="@{/dashboard}">
+							<label style="margin-right: 8px;"><strong>Lọc thống kê: </strong></label>
+							<select name="timeRange" class="filter-select" onchange="this.form.submit()">
+								<option value="today" th:selected="${selectedTime == 'today'}">Hôm nay</option>
+								<option value="week" th:selected="${selectedTime == 'week'}">7 ngày qua</option>
+								<option value="month" th:selected="${selectedTime == 'month'}">Tháng này</option>
+								<option value="year" th:selected="${selectedTime == 'year'}">Năm nay</option>
+							</select>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="row" style="justify-content: center; display: flex;">
+				<div class="col-lg-3 col-md-6">
+					<div class="dashboard-stat color-1">
+						<div class="dashboard-stat-content">
+							<h4 th:text="${Total_Order}"></h4>
+							<span>Tổng số đơn hàng</span>
+						</div>
+						<div class="dashboard-stat-icon"><i class="im im-icon-Add-Bag"></i></div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6">
+					<div class="dashboard-stat color-2">
+						<div class="dashboard-stat-content">
+							<h4 th:text="${Total_Product}"></h4>
+							<span>Tổng số sản phẩm</span>
+						</div>
+						<div class="dashboard-stat-icon"><i class="im im-icon-Polo-Shirt"></i></div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6">
+					<div class="dashboard-stat color-3">
+						<div class="dashboard-stat-content">
+							<h4 th:text="${Total_User}"></h4>
+							<span>Tổng người dùng</span>
+						</div>
+						<div class="dashboard-stat-icon"><i class="im im-icon-Add-UserStar"></i></div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6">
+					<div class="dashboard-stat color-4">
+						<div class="dashboard-stat-content">
+							<h4 th:text="${Total_Category}"></h4>
+							<span>Tổng số danh mục</span>
+						</div>
+						<div class="dashboard-stat-icon"><i class="im im-icon-Box-withFolders"></i></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-6 col-md-12">
+					<div class="dashboard-list-box invoices with-icons margin-top-20">
+						<h4>Đơn hàng gần đây</h4>
+						<ul>
+							<th:block th:each="y : ${recentOrders}">
+								<li>
+									<i class="list-box-icon sl sl-icon-doc"></i>
+									<strong th:text="${y.user != null ? y.user.username : 'Khách vãng lai'}"></strong>
+									<ul>
+										<li th:if="${y.payment_Method == 'Payment on delivery'}" class="unpaid">Thanh
+											toán khi nhận hàng (COD)</li>
+										<li th:if="${y.payment_Method == 'Payment with bank'}" class="paid">Thanh toán
+											qua chuyển khoản</li>
+										<li th:if="${y.payment_Method != 'Payment on delivery' && y.payment_Method != 'Payment with bank'}"
+											th:text="${y.payment_Method}"></li>
+										<li th:text="'Mã đơn: #' + ${y.id}"></li>
+										<li th:text="'Ngày đặt: ' + ${#temporals.format(y.booking_Date, 'dd/MM/yyyy')}">
+										</li>
+										<li
+											th:text="'Tổng tiền: ' + ${#numbers.formatDecimal(y.total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+										</li>
+									</ul>
+									<div class="buttons-to-right">
+										<a th:href="@{/dashboard-invoice/{id}(id=${y.id})}" class="button gray">Xem hóa
+											đơn</a>
+									</div>
+								</li>
+							</th:block>
+						</ul>
+					</div>
+				</div>
+
+				<div class="col-lg-6 col-md-12">
+					<div class="dashboard-list-box with-icons margin-top-20">
+						<h4>
+							Top 5 Bán chạy
+							<span th:if="${selectedTime == 'today'}">(Hôm nay)</span>
+							<span th:if="${selectedTime == 'week'}">(7 ngày qua)</span>
+							<span th:if="${selectedTime == 'month'}">(Tháng này)</span>
+							<span th:if="${selectedTime == 'year'}">(Năm nay)</span>
+						</h4>
+						<ul>
+							<th:block th:each="p : ${topBestSellers}">
+								<li style="padding-left: 30px;">
+									<strong th:text="${p.productName}">Tên sản phẩm</strong>
+									<a>Đã bán: <span th:text="${p.sold}"
+											style="color: #27ae60; font-weight: bold;">0</span> sản phẩm</a>
+								</li>
+							</th:block>
+							<li th:if="${#lists.isEmpty(topBestSellers)}" style="padding-left: 30px; color: #888;">
+								Chưa có dữ liệu bán hàng trong khoảng thời gian này.
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="row" style="margin-top: 30px; margin-bottom: 70px;">
+				<div class="col-lg-12 col-md-12">
+					<div class="dashboard-list-box margin-top-20">
+						<div
+							style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #f8f8f8; border-bottom: 1px solid #e0e0e0;">
+							<h4 style="margin: 0; padding: 0; background: none;">Thống kê bán ra theo thời gian & Cảnh
+								báo tồn kho</h4>
+
+							<form method="GET" th:action="@{/dashboard}"
+								style="display: flex; gap: 10px; align-items: center;">
+								<input type="hidden" name="timeRange" th:value="${selectedTime}" />
+
+								<input type="text" id="tableSearchInput" placeholder="Lọc nhanh trong bảng..."
+									style="padding: 6px 12px; height: 38px; margin: 0; border: 1px solid #ccc; border-radius: 4px; width: 200px;"
+									onkeyup="filterTable()">
+
+
+								<button type="submit" class="button"
+									style="padding: 8px 15px; height: 38px; line-height: 20px;">Tìm kiếm</button>
+								<a th:if="${keyword != null && !keyword.empty}"
+									th:href="@{/dashboard(timeRange=${selectedTime})}" class="button gray"
+									style="padding: 8px 15px; height: 38px; line-height: 20px;">Xóa lọc</a>
+							</form>
+						</div>
+
+						<div style="padding: 15px; background: #fff;">
+							<table class="table-custom" id="inventoryTable">
+								<thead>
+									<tr>
+										<th>Mã SP</th>
+										<th>Tên sản phẩm</th>
+										<th>Danh mục</th>
+										<th>Đã bán (trong kỳ)</th>
+										<th>Tổng tồn kho</th>
+										<th>Trạng thái / Cảnh báo</th>
+										<th>Hành động</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="item : ${inventoryStats}">
+										<td th:text="'#' + ${item.product.id}">#1</td>
+										<td class="product-name" th:text="${item.product.productName}">Tên sản phẩm</td>
+										<td
+											th:text="${item.product.category != null ? item.product.category.category_Name : 'Chưa phân loại'}">
+											Danh mục</td>
+										<td>
+											<strong style="color: #27ae60;" th:text="${item.soldInPeriod}">0</strong>
+										</td>
+										<td>
+											<strong th:text="${item.totalStock}">0</strong>
+										</td>
+										<td>
+											<span th:class="'badge-custom ' + ${item.statusClass}"
+												th:text="${item.status}">Bình thường</span>
+										</td>
+										<td>
+											<a th:href="@{/dashboard-myproducts/variants/{id}(id=${item.product.id})}"
+												class="button gray">Quản lý kho</a>
+										</td>
+									</tr>
+									<tr th:if="${#lists.isEmpty(inventoryStats)}">
+										<td colspan="7" style="text-align: center; color: #888;">Không tìm thấy dữ liệu
+											sản phẩm phù hợp.</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<div class="pagination-container" id="pagination"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</th:block>
+	</th:block>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const table = document.getElementById("inventoryTable");
+			const tbody = table.querySelector("tbody");
+			const rows = Array.from(tbody.querySelectorAll("tr"));
+			const paginationContainer = document.getElementById("pagination");
+
+			if (rows.length <= 1 && rows[0].cells.length === 1) return;
+
+			const rowsPerPage = 10;
+			let currentPage = 1;
+			const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+			function displayTablePage(page) {
+				currentPage = page;
+				const start = (page - 1) * rowsPerPage;
+				const end = start + rowsPerPage;
+
+				rows.forEach((row, index) => {
+					if (index >= start && index < end) {
+						row.style.display = "";
+					} else {
+						row.style.display = "none";
+					}
+				});
+
+				renderPaginationControls();
+			}
+
+			function renderPaginationControls() {
+				paginationContainer.innerHTML = "";
+
+				if (totalPages <= 1) return;
+
+				const prevBtn = document.createElement("button");
+				prevBtn.innerText = "« Trước";
+				prevBtn.className = `pagination-btn ${currentPage === 1 ? 'disabled' : ''}`;
+				prevBtn.onclick = () => {
+					if (currentPage > 1) displayTablePage(currentPage - 1);
+				};
+				paginationContainer.appendChild(prevBtn);
+
+				for (let i = 1; i <= totalPages; i++) {
+					const pageBtn = document.createElement("button");
+					pageBtn.innerText = i;
+					pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
+					pageBtn.onclick = () => displayTablePage(i);
+					paginationContainer.appendChild(pageBtn);
+				}
+
+				const nextBtn = document.createElement("button");
+				nextBtn.innerText = "Sau »";
+				nextBtn.className = `pagination-btn ${currentPage === totalPages ? 'disabled' : ''}`;
+				nextBtn.onclick = () => {
+					if (currentPage < totalPages) displayTablePage(currentPage + 1);
+				};
+				paginationContainer.appendChild(nextBtn);
+			}
+
+			displayTablePage(1);
+		});
+		function filterTable() {
+			const input = document.getElementById("tableSearchInput");
+			const filter = input.value.toLowerCase();
+			const table = document.getElementById("inventoryTable");
+			const tbody = table.querySelector("tbody");
+			const rows = Array.from(tbody.querySelectorAll("tr"));
+
+			rows.forEach(row => {
+				const nameCell = row.querySelector(".product-name");
+				if (nameCell) {
+					const textValue = nameCell.textContent || nameCell.innerText;
+					if (textValue.toLowerCase().indexOf(filter) > -1) {
+						row.style.display = "";
+					} else {
+						row.style.display = "none";
+					}
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>

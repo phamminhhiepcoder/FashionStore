@@ -1,0 +1,267 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>FashionStore Shop</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" href="/img/logo-3.png">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" href="/login-form-14/css/style.css">
+
+</head>
+
+<body>
+	<style>
+		.custom-alert {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 16px 20px;
+			font-size: 16px;
+			font-weight: 500;
+			border-radius: 10px;
+			border: none;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+			margin-bottom: 24px;
+			transition: all 0.3s ease;
+		}
+
+		.alert-content {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.alert-text {
+			font-size: 16px;
+			line-height: 1.5;
+		}
+
+		.alert-icon {
+			width: 24px;
+			height: 24px;
+			flex-shrink: 0;
+		}
+
+		.alert-success {
+			background-color: #e8f5e9;
+			color: #2e7d32;
+			border-left: 5px solid #2e7d32;
+		}
+
+		.alert-danger {
+			background-color: #ffebee;
+			color: #c62828;
+			border-left: 5px solid #c62828;
+		}
+
+		.custom-close {
+			font-size: 24px;
+			line-height: 1;
+			opacity: 0.6;
+			padding: 0;
+			margin: 0;
+			background: transparent;
+			border: none;
+			cursor: pointer;
+			transition: opacity 0.2s ease;
+		}
+
+		.custom-close:hover {
+			opacity: 1;
+		}
+	</style>
+
+	<div th:if="${message}" th:class="'alert alert-' + ${messageType} + ' alert-dismissible fade show custom-alert'"
+		role="alert">
+		<div class="alert-content">
+			<svg th:if="${messageType == 'success'}" class="alert-icon" viewBox="0 0 24 24" fill="none"
+				stroke="currentColor" stroke-width="2">
+				<path stroke-linecap="round" stroke-linejoin="round"
+					d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+			</svg>
+			<svg th:if="${messageType == 'danger'}" class="alert-icon" viewBox="0 0 24 24" fill="none"
+				stroke="currentColor" stroke-width="2">
+				<path stroke-linecap="round" stroke-linejoin="round"
+					d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+			</svg>
+			<span th:text="${message}" class="alert-text"></span>
+		</div>
+		<button type="button" class="close custom-close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<a th:href="@{/home}" class="heading-section">FashionStore Shop</a>
+				</div>
+			</div>
+			<div th:if="${forgot==null}" class="row justify-content-center">
+				<div class="col-md-12 col-lg-10">
+					<div class="wrap d-md-flex">
+						<div class="img" style="background-image: url(/login-form-14/images/bg-1.jpg);">
+						</div>
+						<div class="login-wrap p-4 p-md-5">
+							<div class="d-flex">
+								<div class="w-100" style="display: flex; transform: translateY(10px);">
+									<h3 class="mb-4">Đăng nhập</h3>
+								</div>
+								<div class="w-100 flex-icon">
+									<a href="#"
+										class="social-icon d-flex align-items-center justify-content-center"><span
+											class="fa fa-facebook"></span></a> <a
+										href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/signin-google&response_type=code&client_id=540833837549-eof6l5jn50qm1r4j72i1cnorecik8rt0.apps.googleusercontent.com&approval_prompt=force"
+										class="social-icon d-flex align-items-center justify-content-center"><span
+											class="fa fa-google"></span></a>
+								</div>
+							</div>
+							<form th:action="@{/signin}" method="POST" class="signin-form">
+								<div class="form-group mb-3">
+									<label class="label" for="name">Tên đăng nhập</label> <input
+										th:value="${login_name}" name="login-name" type="text" class="form-control"
+										placeholder="Tên đăng nhập" required>
+								</div>
+								<div class="form-group mb-3">
+									<label class="label" for="password">Mật khẩu</label> <input th:value="${pass}"
+										name="password" type="password" class="form-control" placeholder="Mật khẩu"
+										required>
+								</div>
+								<div th:if="${successSignUp != null}">
+									<p style="color: green;" th:text="${successSignUp}"></p>
+								</div>
+								<div th:if="${errorLogin != null}">
+									<p style="color: red;" th:text="${errorLogin}"></p>
+								</div>
+
+								<div class="form-group">
+									<button type="submit" class="form-control btn btn-primary rounded submit px-3">Đăng
+										nhập</button>
+								</div>
+								<div class="form-group d-md-flex">
+									<div class="w-50 text-left">
+										<label class="checkbox-wrap checkbox-primary mb-0">Ghi nhớ<input name="remember"
+												type="checkbox" checked> <span class="checkmark"></span>
+										</label>
+									</div>
+									<div class="w-50 text-md-right">
+										<a th:href="@{forgot}">Quên mật khẩu</a>
+									</div>
+								</div>
+							</form>
+							<p class="text-center">
+								Không có tài khoản? <a th:href="@{/signup}">Đăng ký</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div th:if="${forgot!=null}" class="row justify-content-center">
+				<div class="col-md-12 col-lg-10">
+					<div class="wrap d-md-flex">
+						<div class="img" style="background-image: url(/login-form-14/images/bg-1.jpg);">
+						</div>
+						<div class="login-wrap p-4 p-md-5">
+							<div class="d-flex">
+								<div class="w-100" style="display: flex; transform: translateY(10px);">
+									<h4 class="mb-4">Quên mật khẩu</h4>
+								</div>
+								<div class="w-100 flex-icon">
+									<a href="#"
+										class="social-icon d-flex align-items-center justify-content-center"><span
+											class="fa fa-facebook"></span></a> <a href="#"
+										class="social-icon d-flex align-items-center justify-content-center"><span
+											class="fa fa-google"></span></a>
+								</div>
+							</div>
+
+							<form th:if="${sendcode==null && changepass == null}" th:action="@{/forgot}" method="POST"
+								class="signin-form">
+								<div class="form-group mb-3">
+									<label class="label" for="name">Tên đăng nhập</label> <input name="login-name"
+										type="text" class="form-control" placeholder="Tên đăng nhập" required>
+								</div>
+								<div th:if="${error_forgot != null}">
+									<p style="color: red;" th:text="${error_forgot}"></p>
+								</div>
+
+								<div class="form-group">
+									<button type="submit" class="form-control btn btn-primary rounded submit px-3">Xác
+										nhận</button>
+								</div>
+							</form>
+
+
+
+							<form th:if="${sendcode != null && changepass == null}" th:action="@{/code}" method="POST"
+								class="signin-form">
+
+								<div class="alert alert-info mb-3" th:if="${username != null}">
+									Tên đăng nhập: <strong th:text="${username}">FashionStore</strong>. Bạn vui lòng kiểm tra
+									email và nhập OTP để lấy lại mật khẩu.
+								</div>
+
+								<div class="form-group mb-3">
+									<label class="label" for="name">Mã OTP</label>
+									<input name="code_input" type="text" class="form-control"
+										placeholder="Nhập mã OTP từ email" required>
+								</div>
+
+								<div th:if="${error_code != null}">
+									<p style="color: red;" th:text="${error_code}"></p>
+								</div>
+
+								<div class="form-group">
+									<button type="submit" class="form-control btn btn-primary rounded submit px-3">Xác
+										nhận</button>
+								</div>
+							</form>
+
+
+							<form th:if="${changepass != null}" th:action="@{/newpass}" method="POST"
+								class="signin-form">
+								<div class="form-group mb-3">
+									<label class="label" for="name">Mật khẩu mới</label> <input name="new_pass"
+										type="password" class="form-control" required>
+								</div>
+								<div class="form-group mb-3">
+									<label class="label" for="name">Xác nhận mật khẩu</label> <input
+										th:value="${login_name}" name="confirm_new_pass" type="password"
+										class="form-control" required>
+								</div>
+								<div th:if="${error_newpass != null}">
+									<p style="color: red;" th:text="${error_newpass}"></p>
+								</div>
+
+								<div class="form-group">
+									<button type="submit" class="form-control btn btn-primary rounded submit px-3">Xác
+										nhận</button>
+								</div>
+							</form>
+							<p style="margin-bottom: unset; margin-top: 3rem;" class="text-center">
+								Không có tài khoản? <a th:href="@{/signup}">Đăng ký</a>
+							</p>
+							<p class="text-center">
+								Hoặc &nbsp; <a th:href="@{/signin}">Đăng nhập</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="/login-form-14/js/jquery.min.js"></script>
+	<script src="/login-form-14/js/popper.js"></script>
+	<script src="/login-form-14/js/bootstrap.min.js"></script>
+	<script src="/login-form-14/js/main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<th:block th:fragment="header">
+    <header id="header-container" class="fixed fullwidth dashboard">
+
+        <div id="header" class="not-sticky">
+            <div class="container">
+
+                <div class="left-side">
+
+                    <div id="logo">
+                        <a th:href="@{/}"><img src="/images/logoadmin.png" alt=""></a>
+                        <a th:href="@{/}" class="dashboard-logo"><img src="/images/logoadmin.png" alt=""></a>
+                    </div>
+
+                    <div class="mmenu-trigger">
+                        <button class="hamburger hamburger--collapse" type="button">
+                            <span class="hamburger-box"> <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="right-side">
+                    <div class="header-widget">
+
+                        <div class="user-menu">
+                            <div class="user-name">
+                                <span><img th:src="${session.admin.avatar}" alt=""></span>Tài khoản
+                            </div>
+                            <ul>
+                                <li><a th:href="@{/dashboard}"><i class="sl sl-icon-settings"></i> Thống kê</a></li>
+                                <li><a th:href="@{/dashboard-myprofile}"><i class="sl sl-icon-envelope-open"></i> Tài
+                                        Khoản</a></li>
+                                <li><a th:href="@{/dashboard-orders}"><i class="fa fa-calendar-check-o"></i> Đơn
+                                        Hàng</a>
+                                </li>
+                                <li><a th:href="@{/logout-admin}"><i class="sl sl-icon-power"></i> Đăng Xuất</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+</th:block>

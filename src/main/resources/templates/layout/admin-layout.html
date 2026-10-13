@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" th:fragment="layout" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Trang Quản Trị</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" th:href="@{/listeo/css/style.css}">
+    <link rel="stylesheet" th:href="@{/listeo/css/main-color.css}" id="colors">
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/assets_admin/vendors/images/apple-touch-icon.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/assets_admin/vendors/images/favicon-32x32.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/assets_admin/vendors/images/favicon-16x16.png}" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/themify-icons@0.1.2/css/themify-icons.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" th:href="@{/assets_admin/vendors/styles/core.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/assets_admin/vendors/styles/icon-font.min.css}" />
+    <link rel="stylesheet" type="text/css"
+        th:href="@{/assets_admin/plugins/datatables/css/dataTables.bootstrap4.min.css}" />
+    <link rel="stylesheet" type="text/css"
+        th:href="@{/assets_admin/plugins/datatables/css/responsive.bootstrap4.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/assets_admin/vendors/styles/style.css}" />
+    <link rel="icon" th:href="@{/img/logo-3.png}">
+</head>
+
+<body>
+    <div id="wrapper">
+        <div th:replace="fragments/header-admin :: header"></div>
+
+        <div id="dashboard">
+            <div th:replace="fragments/nav-admin :: nav"></div>
+            <div class="dashboard-content">
+                <th:block th:insert="~{::pageContent}"></th:block>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/scripts/jquery-3.6.0.min.js}"></script>
+    <script th:src="@{/scripts/jquery-migrate-3.3.2.min.js}"></script>
+    <script th:src="@{/scripts/mmenu.min.js}"></script>
+    <script th:src="@{/scripts/chosen.min.js}"></script>
+    <script th:src="@{/scripts/slick.min.js}"></script>
+    <script th:src="@{/scripts/rangeslider.min.js}"></script>
+    <script th:src="@{/scripts/magnific-popup.min.js}"></script>
+    <script th:src="@{/scripts/waypoints.min.js}"></script>
+    <script th:src="@{/scripts/counterup.min.js}"></script>
+    <script th:src="@{/scripts/jquery-ui.min.js}"></script>
+    <script th:src="@{/scripts/tooltips.min.js}"></script>
+    <script th:src="@{/scripts/custom.js}"></script>
+    <script th:src="@{/scripts/myjs.js}"></script>
+    <script th:src="@{/assets_admin/vendors/scripts/core.js}"></script>
+    <script th:src="@{/assets_admin/vendors/scripts/script.min.js}"></script>
+    <script th:src="@{/assets_admin/vendors/scripts/process.js}"></script>
+    <script th:src="@{/assets_admin/vendors/scripts/layout-settings.js}"></script>
+    <script th:src="@{/assets_admin/plugins/datatables/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/assets_admin/plugins/datatables/js/dataTables.bootstrap4.min.js}"></script>
+    <script th:src="@{/assets_admin/plugins/datatables/js/dataTables.responsive.min.js}"></script>
+    <script th:src="@{/assets_admin/plugins/datatables/js/responsive.bootstrap4.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+</body>
+
+</html>
