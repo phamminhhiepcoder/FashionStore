@@ -27,7 +27,18 @@
         });
         if ($('.product__filter').length > 0) {
             var containerEl = document.querySelector('.product__filter');
-            var mixer = mixitup(containerEl);
+
+            var mixer = mixitup(containerEl, {
+                selectors: {
+                    target: '.mix'
+                },
+                load: {
+                    filter: '.new-arrivals'
+                },
+                animation: {
+                    enable: true
+                }
+            });
         }
     });
 

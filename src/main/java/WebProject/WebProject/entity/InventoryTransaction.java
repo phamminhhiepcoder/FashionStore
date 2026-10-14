@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Table(name = "inventory_transaction")
 public class InventoryTransaction {

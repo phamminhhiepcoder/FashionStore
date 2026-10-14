@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Table(name = "sepay_transaction")
 public class SepayTransaction {

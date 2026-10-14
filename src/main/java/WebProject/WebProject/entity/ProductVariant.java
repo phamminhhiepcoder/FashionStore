@@ -17,7 +17,7 @@ import lombok.ToString;
 
 @Entity
 @Data
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Table(name = "product_variant")
 public class ProductVariant {

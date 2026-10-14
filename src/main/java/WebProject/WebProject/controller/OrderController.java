@@ -38,7 +38,7 @@ public class OrderController {
 	OrderService orderService;
 
 	@Autowired
-	MailService mailService; 
+	MailService mailService;
 
 	@Autowired
 	HttpSession session;

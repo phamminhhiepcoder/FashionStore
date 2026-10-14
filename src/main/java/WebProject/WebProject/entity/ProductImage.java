@@ -21,7 +21,7 @@ import lombok.ToString;
 
 @Entity
 @Data 
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Table(name = "product_image")
 public class ProductImage {

@@ -22,7 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	List<Product> findByProduct_NameContaining(String name);
 
 	@Query(value = "SELECT p.* FROM product p " +
-			"ORDER BY (p.sold >= 100) DESC, p.sold DESC " +
+			"ORDER BY p.sold DESC " +
 			"LIMIT 24", nativeQuery = true)
 	List<Product> findTopProductBestSellers();
 

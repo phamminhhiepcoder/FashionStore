@@ -15,7 +15,7 @@ import lombok.ToString;
 
 @Entity
 @Data
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Table(name = "order_item")
 public class OrderItem {

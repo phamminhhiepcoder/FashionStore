@@ -19,7 +19,7 @@ import lombok.ToString;
 
 @Entity
 @Data
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Table(name = "product")
 public class Product {

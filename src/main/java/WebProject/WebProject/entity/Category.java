@@ -23,7 +23,6 @@ import lombok.ToString;
 
 @Entity 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "category")
 public class Category {

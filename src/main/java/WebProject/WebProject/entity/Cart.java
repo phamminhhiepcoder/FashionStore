@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,6 @@ import lombok.ToString;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "cart")
 public class Cart {

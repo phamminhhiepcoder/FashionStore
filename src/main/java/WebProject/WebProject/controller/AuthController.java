@@ -122,8 +122,16 @@ public class AuthController {
 
 		String encodedValue = Base64.getEncoder().encodeToString(password.getBytes());
 		String avatar = "https://haycafe.vn/wp-content/uploads/2022/02/Avatar-trang-den.png";
-		User newUser = new User(id, "default", "user", encodedValue, fullname, avatar, email, null, null, null,
-				LocalDateTime.now(), LocalDateTime.now());
+
+		User newUser = new User();
+		newUser.setId(id);
+		newUser.setUsername(id); 
+		newUser.setRole("user");
+		newUser.setPassword(encodedValue);
+		newUser.setAvatar(avatar);
+		newUser.setEmail(email);
+		newUser.setCreatedAt(LocalDateTime.now());
+		newUser.setUpdatedAt(LocalDateTime.now());
 
 		session.setAttribute("userRegister", newUser);
 		session.removeAttribute("noSendRegisterEmail");
