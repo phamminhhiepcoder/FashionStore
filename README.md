@@ -17,8 +17,8 @@ An AI-powered learning platform that helps students study smarter by analyzing u
 - Context-aware product search based on descriptions and categories
 - Natural language queries for product availability and stock information
 - AI-assisted product information retrieval and customer support
-### ☁ File & Email Management
-- File handling via Cloudinary
+### ☁ Media & Email Management
+- Media files handling via Cloudinary
 - Email notifications using Google Email Service:
   - Account registration
   - Reset passwords
