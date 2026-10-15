@@ -60,4 +60,16 @@ public class User {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+	@javax.persistence.PrePersist
+	protected void onCreate() {
+		LocalDateTime now = LocalDateTime.now();
+		createdAt = now;
+		updatedAt = now;
+	}
+
+	@javax.persistence.PreUpdate
+	protected void onUpdate() {
+		updatedAt = LocalDateTime.now();
+	}
 }
