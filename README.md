@@ -130,7 +130,7 @@ GROQ_MODEL=<your-model>
 ## Screenshots
 <img width="1341" height="924" alt="image" src="https://github.com/user-attachments/assets/d448e383-41c7-4119-96eb-431ef635c7b4" />
 <img width="1357" height="834" alt="image" src="https://github.com/user-attachments/assets/eada87bd-e3bd-4698-b6e7-6f14c1e573f5" />
-<img width="1277" height="910" alt="image" src="https://github.com/user-attachments/assets/6f9cf291-552b-40ab-b711-95417e393444" />
+<img width="1368" height="850" alt="image" src="https://github.com/user-attachments/assets/c2a6b5c7-5733-46f6-8f6f-5c6651a8790b" />
 <img width="1141" height="766" alt="image" src="https://github.com/user-attachments/assets/fa8ef974-f0d0-4bff-ad36-0086a119a04a" />
 
 
