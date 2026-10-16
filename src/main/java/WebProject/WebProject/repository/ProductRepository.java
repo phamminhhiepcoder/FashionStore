@@ -138,4 +138,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 			Pageable pageable);
 
 	List<Product> findByProductNameContainingIgnoreCase(String keyword);
+
+	@Query("SELECT DISTINCT p FROM Product p " +
+			"LEFT JOIN FETCH p.category " +
+			"LEFT JOIN FETCH p.variants v " +
+			"WHERE p.is_Active = :active")
+	List<Product> findActiveProductsWithVariants(
+			@Param("active") int active
+	);
 }

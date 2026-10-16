@@ -1,7 +1,6 @@
 package WebProject.WebProject.entity;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -11,7 +10,6 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -85,11 +83,12 @@ public class Product {
 
 		return defaultImage;
 	}
-	@Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+	@Column(name = "created_at", nullable = false)
+	private LocalDateTime createdAt;
+
+	@Column(name = "updated_at", nullable = false)
+	private LocalDateTime updatedAt;
 
 	@javax.persistence.PrePersist
 	protected void onCreate() {
