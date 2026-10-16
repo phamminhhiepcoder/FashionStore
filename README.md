@@ -119,7 +119,10 @@ cloudinary.api_secret=<your-api-secret>
 #Send email
 spring.mail.username=<your-email>
 spring.mail.password=<your-password>
-
+#GROQ
+grop.api.key=<your-key>
+grop.api.url=https://api.groq.com/openai/v1
+grop.api.model=<your-model>
 ```
 
 ---
